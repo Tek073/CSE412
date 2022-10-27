@@ -1,4 +1,3 @@
-
 -- create resistance table
 CREATE TABLE resistances (
   typeResistances varchar(55),
