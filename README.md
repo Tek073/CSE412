@@ -3,6 +3,6 @@
 
 Things people are working on
 
-Ryan - Card Table Creation
+Ryan - attacks table creation
 
 Finished Work - N/A
