@@ -1,6 +1,6 @@
 -- create table attacks
 CREATE TABLE attacks (
-  name varchar(55) NOT NULL,
+  nameAttacks varchar(55) NOT NULL,
   cost int,
   text varchar(55),
   damage int,
