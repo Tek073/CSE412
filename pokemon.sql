@@ -7,7 +7,10 @@ CREATE TABLE pokemon (
   evolvesFrom varchar(55),
   nameAbility varchar(55),
   PRIMARY KEY (pxdx),
-  FOREIGN KEY (nameAbility) REFRENCES abilities(nameAbility)
+  FOREIGN KEY (nameAbility) REFERENCES abilities(nameAbility),
+  FOREIGN KEY (nameAttack) REFERENCES attacks(nameAttack),
+  FOREIGN KEY (typeWeaknesses, valueWeaknesses) REFERENCES weaknesses(typeWeaknesses, valueWeaknesses),
+  FOREIGN KEY (typeResistances, valueResistances) REFERENCES resistances(typeResistances, valueResistances)
 );
 
 INSERT INTO pokemon
