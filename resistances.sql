@@ -1,9 +1,9 @@
 
 -- create resistance table
 CREATE TABLE resistances (
-  type varchar(55),
-  value int,
-  PRIMARY KEY (type, value)
+  typeResistances varchar(55),
+  valueResistances int,
+  PRIMARY KEY (typeResistances, valueResistances)
 );
 
 -- insert values into table
