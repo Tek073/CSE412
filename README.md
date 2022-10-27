@@ -3,6 +3,6 @@
 
 Things people are working on
 
-Ryan - abilities table
+Ryan - pokemon table
 
 Finished Work - N/A
