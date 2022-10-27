@@ -3,6 +3,6 @@
 
 Things people are working on
 
-Ryan - attacks table creation
+Ryan - N/a
 
 Finished Work - N/A
