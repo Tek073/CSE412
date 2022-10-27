@@ -21,4 +21,4 @@ VALUES
   ('toxic thread', 'poison enemy', 'poison');
   
 -- show abilities table
-SELECT * FROM abilities;
+-- SELECT * FROM abilities;
