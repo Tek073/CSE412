@@ -1,10 +1,10 @@
 -- create table attacks
 CREATE TABLE attacks (
-  nameAttacks varchar(55) NOT NULL,
+  nameAttack varchar(55) NOT NULL,
   cost int,
   text varchar(55),
   damage int,
-  PRIMARY KEY (name)
+  PRIMARY KEY (nameAttack)
 );
 
 -- fill table attacks
