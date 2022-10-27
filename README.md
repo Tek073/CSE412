@@ -3,6 +3,10 @@
 
 Things people are working on
 
-Ryan - pokemon table
+Ryan - N/a
 
-Finished Work - N/A
+In Progress - pokemon table
+
+Finished Work - Attack and Abilities table
+
+
