@@ -1,13 +1,14 @@
 -- create abilities table
-CREATE TABLE abilites (
+CREATE TABLE abilities (
   name varchar(55) NOT NULL,
   text varchar(55),
-  type varchar(55);
+  type varchar(55),
   PRIMARY KEY (name)
 );
 
 -- fill abilities table
 INSERT INTO abilities
+VALUES
   ('harden', 'increase pokemons defense', 'normal'),
   ('charm', 'lower enemy attack', 'fairy'),
   ('leer', 'lower enemy defense', 'normal'),
