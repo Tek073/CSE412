@@ -20,4 +20,4 @@ VALUES
   ('double kick', 4, 'double kick pokemon', 75);
 
 -- show that attacks table is full
-SELECT * FROM attacks;
+-- SELECT * FROM attacks;
