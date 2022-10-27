@@ -1,9 +1,9 @@
 -- create abilities table
 CREATE TABLE abilities (
-  name varchar(55) NOT NULL,
+  nameAbility varchar(55) NOT NULL,
   text varchar(55),
   type varchar(55),
-  PRIMARY KEY (name)
+  PRIMARY KEY (nameAbility)
 );
 
 -- fill abilities table
@@ -22,11 +22,11 @@ VALUES
   
 -- create table attacks
 CREATE TABLE attacks (
-  nameAttacks varchar(55) NOT NULL,
+  nameAttack varchar(55) NOT NULL,
   cost int,
   text varchar(55),
   damage int,
-  PRIMARY KEY (name)
+  PRIMARY KEY (nameAttack)
 );
 
 -- fill table attacks
