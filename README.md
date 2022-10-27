@@ -3,6 +3,6 @@
 
 Things people are working on
 
-Ryan - N/a
+Ryan - abilities table
 
 Finished Work - N/A
