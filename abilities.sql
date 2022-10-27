@@ -1,9 +1,9 @@
 -- create abilities table
 CREATE TABLE abilities (
-  name varchar(55) NOT NULL,
+  nameAbility varchar(55) NOT NULL,
   text varchar(55),
   type varchar(55),
-  PRIMARY KEY (name)
+  PRIMARY KEY (nameAbility)
 );
 
 -- fill abilities table
