@@ -1,7 +1,7 @@
 -- decks have 1-60 cards, and up to 4 duplicates
 CREATE TABLE _cards_in_decks (
   deckID int,
-  cardID varchar(20),
+  cardID int,
   count int, -- Using count variable allows duplicates, since it doesn't make the primary key refer to more than 1 row
              -- Count variable preferable to, e.g. deckSlot, since mixing insert/delete doesn't mess it up
  
