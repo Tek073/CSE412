@@ -7,8 +7,9 @@ Ryan - N/a
 
 Luc - Card Object
 
-In Progress - pokemon table
+In Progress - 
 
-Finished Work - Attack and Abilities table
+Finished Work - attack, abilities, resistence, weakness, pokemon
+Also a test for the pokemon has a relationship has been tested
 
 
