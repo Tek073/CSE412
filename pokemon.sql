@@ -1,5 +1,5 @@
 CREATE TABLE pokemon (
-  namePokemon varchar(55),
+  id int,-- namePokemon varchar(55) unnecessary; primary key inherited from card
   level int,
   hp int,
   pxdx int,
@@ -11,7 +11,8 @@ CREATE TABLE pokemon (
   valueWeaknesses int,
   typeResistances varchar(55),
   valueResistances int,
-  PRIMARY KEY (pxdx),
+  PRIMARY KEY (id),
+  FOREIGN KEY (id) REFERENCES cards(id), -- inherits card info
   FOREIGN KEY (nameAbility) REFERENCES abilities(nameAbility),
   FOREIGN KEY (nameAttack) REFERENCES attacks(nameAttack),
   FOREIGN KEY (typeWeaknesses, valueWeaknesses) REFERENCES weaknesses(typeWeaknesses, valueWeaknesses),
@@ -20,6 +21,6 @@ CREATE TABLE pokemon (
 
 INSERT INTO pokemon
 VALUES
-  ('biddof', 12, 33, 1, 'barbarrel', 'n/a', 'harden', 'pound', 'fire', 2, 'water', 2);
+  (0, 12, 33, 1, 'barbarrel', NULL, 'harden', 'pound', 'fire', 2, 'water', 2); -- instead of 'n/a', use NULL 
   
 SELECT * FROM pokemon
