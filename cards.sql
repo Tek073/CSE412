@@ -1,6 +1,6 @@
 --- this is the collection of cards
 CREATE TABLE cards (
-  cardID VARCHAR(20),
+  cardID int,
   userID int,
   count int, -- duplicate cards increment count
 
