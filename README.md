@@ -5,7 +5,7 @@ Things people are working on
 
 Ryan - Trainer/Energy 
 
-Luc - Card, Set, Collections
+Luc - Card, Set, Collections, User, Deck
 
 In Progress - 
 
