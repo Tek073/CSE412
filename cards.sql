@@ -51,10 +51,28 @@ CREATE TABLE attacks (
   id VARCHAR(20),
   nameAttack varchar(55) NOT NULL,
   cost int,
-  text varchar(55),
   damage int,
+  text varchar(55),
   PRIMARY KEY (id, nameAttack),
   FOREIGN KEY (id) REFERENCES (pokemon)
+);
+
+-- create weaknesses table
+CREATE TABLE weaknesses (
+  id varchar(20),
+  typeWeaknesses varchar(55),
+  valueWeaknesses varchar(5), -- e.g. 1.5
+  PRIMARY KEY (typeWeaknesses, valueWeaknesses)
+  FOREIGN KEY (id) REFERENCES pokemon(id)
+);
+
+-- create resistance table
+CREATE TABLE resistances (
+  id varchar(20),
+  typeResistances varchar(55),
+  valueResistances varchar(5), -- e.g. 0.5
+  PRIMARY KEY (typeResistances, valueResistances)
+  FOREIGN KEY (id) REFERENCES pokemon(id)
 );
 
 -- There is a hiearachy to inserts; sets -> cards -> pokemon -> attacks, abilities, types
@@ -92,3 +110,20 @@ INSERT INTO weaknesses VALUES
 ('xy1-1', 'Fire', '2');
 -- no resistances
 -- no abilities
+
+-- (Card(abilities=None, artist='Eske Yoshinob', ancientTrait=None, attacks=[Attack(name='Poison Powder', cost=['Grass', 'Colorless', 'Colorless'], convertedEnergyCost=3, damage='60', 
+-- text="Your opponent's Active Pokémon is now Poisoned."), Attack(name='Jungle Hammer', cost=['Grass', 'Grass', 'Colorless', 'Colorless'], convertedEnergyCost=4, damage='90', 
+-- text='Heal 30 damage from this Pokémon.')], cardmarket=Cardmarket(url='https://prices.pokemontcg.io/cardmarket/xy1-1', updatedAt='2022/10/26', 
+-- prices=CardmarketPrices(averageSellPrice=5.25, lowPrice=1.99, trendPrice=5.91, germanProLow=None, suggestedPrice=None, reverseHoloSell=None, reverseHoloLow=None, 
+-- reverseHoloTrend=4.37, lowPriceExPlus=3.0, avg1=5.0, avg7=6.02, avg30=5.51, reverseHoloAvg1=3.99, reverseHoloAvg7=4.56, reverseHoloAvg30=4.47)), convertedRetreatCost=4, 
+-- evolvesFrom=None, flavorText=None, hp='180', id='xy1-1', images=CardImage(small='https://images.pokemontcg.io/xy1/1.png', large='https://images.pokemontcg.io/xy1/1_hires.png'), 
+-- legalities=Legality(unlimited='Legal', expanded='Legal', standard=None), regulationMark=None, name='Venusaur-EX', nationalPokedexNumbers=[3], number='1', rarity='Rare Holo EX', 
+-- resistances=None, retreatCost=['Colorless', 'Colorless', 'Colorless', 'Colorless'], rules=['Pokémon-EX rule: When a Pokémon-EX has been Knocked Out, your opponent takes 2 Prize cards.'], 
+-- set=Set(id='xy1', images=SetImage(symbol='https://images.pokemontcg.io/xy1/symbol.png', logo='https://images.pokemontcg.io/xy1/logo.png'), 
+-- legalities=Legality(unlimited='Legal', expanded='Legal', standard=None), name='XY', printedTotal=146, ptcgoCode='XY', releaseDate='2014/02/05', series='XY', total=146, 
+-- updatedAt='2018/03/04 10:35:00'), subtypes=['Basic', 'EX'], supertype='Pokémon', tcgplayer=TCGPlayer(url='https://prices.pokemontcg.io/tcgplayer/xy1-1', 
+-- updatedAt='2022/10/26', prices=TCGPrices(normal=None, holofoil=TCGPrice(low=2.4, mid=3.94, high=40.02, market=3.59, directLow=3.61), reverseHolofoil=None, 
+-- firstEditionHolofoil=None, firstEditionNormal=None)), types=['Grass'], weaknesses=[Weakness(type='Fire', value='×2')])
+-- )
+
+
