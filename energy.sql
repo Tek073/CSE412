@@ -21,7 +21,7 @@ VALUES
   ('ice', 1, 53),
   ('dark', 1, 54),
   ('rock', 1, 55),
-  ('rock', 1, 56),
+  ('lightning', 1, 56),
   ('dragon', 1, 57),
   ('grass', 1, 58),
   ('ground', 1, 59);
