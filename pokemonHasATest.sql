@@ -1,7 +1,25 @@
+-- create legalities Table
+CREATE TABLE Legalities (
+  nameOfLegalCompetition varchar(100) NOT NULL,
+  text varchar(100),
+  PRIMARY KEY (nameOfLegalCompetition)
+);
+
+-- fill abilities table
+INSERT INTO Legalities
+VALUES
+  ('standard', 'The card is legal only in standard competitions'),
+  ('expanded', 'The card is legal only in expanded competitions'),
+  ('unlimited', 'The card is legal only in unlimted competitions'),
+  ('all competitions', 'The card is legal in all competitions'),
+  ('unlimited and standard', 'The card is legal only in unlimited and standard competitions'),
+  ('expanded and standard', 'The card is legal only in expanded and standard competitions'),
+  ('expanded and unlimited', 'The card is legal only in expanded and unlimited competitions');
+
 -- create abilities table
 CREATE TABLE abilities (
   nameAbility varchar(55) NOT NULL,
-  text varchar(55),
+  text varchar(555),
   type varchar(55),
   PRIMARY KEY (nameAbility)
 );
@@ -18,6 +36,7 @@ VALUES
   ('hail', 'increase ice attacks', 'ice'),
   ('sunny day', 'increase fire attacks', 'fire'),
   ('water sprout', 'increase water attacks', 'water'),
+  ('n/a', 'the pokemon has no ability', 'n/a'),
   ('toxic thread', 'poison enemy', 'poison');
   
 -- create table attacks
@@ -39,6 +58,7 @@ VALUES
   ('blizzard', 5, 'create a blizzrd', 110),
   ('ember', 2, 'burn enemy', 40),
   ('cut', 1, 'cut pokemon', 20),
+  ('Dancing Shuriken', 3, 'Throw 3 shurikens', 210),
   ('double kick', 4, 'double kick pokemon', 75);
   
 -- create resistance table
@@ -83,6 +103,7 @@ VALUES
   ('dark', 1),
   ('fairy', 1),
   ('steel', 1),
+  ('Lightning', 2),
   ('dragon', 1);
   
 
@@ -99,7 +120,9 @@ CREATE TABLE pokemon (
   valueWeaknesses int,
   typeResistances varchar(55),
   valueResistances int,
+  legalities varchar(100),
   PRIMARY KEY (pxdx),
+  FOREIGN KEY (legalities) REFERENCES Legalities(nameOfLegalCompetition),
   FOREIGN KEY (nameAbility) REFERENCES abilities(nameAbility),
   FOREIGN KEY (nameAttack) REFERENCES attacks(nameAttack),
   FOREIGN KEY (typeWeaknesses, valueWeaknesses) REFERENCES weaknesses(typeWeaknesses, valueWeaknesses),
@@ -108,6 +131,7 @@ CREATE TABLE pokemon (
 
 INSERT INTO pokemon
 VALUES
-  ('biddof', 12, 33, 1, 'barbarrel', 'n/a', 'harden', 'pound', 'fire', 2, 'water', 2);
+  ('biddof', 12, 33, 1, 'barbarrel', 'n/a', 'harden', 'pound', 'fire', 2, 'water', 2, 'standard'),
+  ('Greninja V', NULL , 210, 658, 'n/a', 'n/a', 'n/a', 'Dancing Shuriken', 'Lightning', 2, 'n/a', NULL, 'expanded');
   
 SELECT * FROM pokemon
