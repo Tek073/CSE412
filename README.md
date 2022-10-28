@@ -3,7 +3,7 @@
 
 Things people are working on
 
-Ryan - N/a
+Ryan - Trainer/Energy 
 
 Luc - Card Object
 
