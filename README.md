@@ -5,7 +5,7 @@ Things people are working on
 
 Ryan - Trainer/Energy 
 
-Luc - Card Object
+Luc - Card, Set, Collections
 
 In Progress - 
 
