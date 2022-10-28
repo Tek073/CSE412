@@ -8,6 +8,7 @@ Luc - Card, Set, Collections, User, Deck <br/>
 In Progress - <br/>
 Finished Work - attack, abilities, resistence, weakness, pokemon <br/>
 Also a test for the pokemon has a relationship has been tested <br/>
+Legalities and the relationship with primary key were added to pokemonHasATest file <br/>
 
 Trainer/Energy (reliant on a card class) <br/>
 
