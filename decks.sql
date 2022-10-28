@@ -1,7 +1,7 @@
 CREATE TABLE decks (
   deckID int,
   userID int,
-  cardID varchar(20),
+  cardID int,
   deckName varchar(255),
   
   PRIMARY KEY (deckID),
