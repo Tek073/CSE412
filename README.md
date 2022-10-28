@@ -12,6 +12,6 @@ In Progress -
 Finished Work - attack, abilities, resistence, weakness, pokemon
 Also a test for the pokemon has a relationship has been tested
 
-\nTrainer/Energy (reliant on a card class)
+Trainer/Energy (reliant on a card class)
 
 
