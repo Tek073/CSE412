@@ -88,7 +88,7 @@ CREATE TABLE cards (
   largeImage VARCHAR(255), -- URL; could be quite long
   
   PRIMARY KEY (cardID),
-  FOREIGN KEY (setID) REFERENCES sets -- set added first, then the card. cards has FK, b/c it is 'many' in many-to-1 rel with sets
+  FOREIGN KEY (setID) REFERENCES sets ON DELETE SET NULL -- set added first, then the card. cards has FK, b/c it is 'many' in many-to-1 rel with sets
 );
 
 -- decks have 1-60 cards, and up to 4 duplicates
@@ -102,7 +102,7 @@ CREATE TABLE _cards_in_decks (
  
   PRIMARY KEY (deckID, cardID),
   FOREIGN KEY (deckID) REFERENCES decks, -- checks deck exists
-  FOREIGN KEY (cardID) REFERENCES cards -- checks card exists in collection
+  FOREIGN KEY (cardID) REFERENCES cards ON DELETE CASCADE-- checks card exists in collection
 );
 
 -- b/c there are multiple users, there are multiple collections. 
@@ -113,8 +113,8 @@ CREATE TABLE _cards_in_collections (
   cardID VARCHAR(20),
   count int,
 
-  PRIMARY KEY (userID),
-  FOREIGN KEY (cardID) REFERENCES cards
+  PRIMARY KEY (userID, cardID),
+  FOREIGN KEY (cardID) REFERENCES cards ON DELETE CASCADE
 );
 
 -- extra pokemon info
@@ -131,7 +131,7 @@ CREATE TABLE pokemon (
   -- typeResistances varchar(55),
   -- valueResistances varchar(5), -- e.g. 0.5
   PRIMARY KEY (id),
-  FOREIGN KEY (id) REFERENCES cards -- inherits card info
+  FOREIGN KEY (id) REFERENCES cards ON DELETE CASCADE -- inherits card info
 );
 
 -- create table attacks
@@ -143,7 +143,7 @@ CREATE TABLE attacks (
   damage int,
   text varchar(555),
   PRIMARY KEY (id, nameAttack),
-  FOREIGN KEY (id) REFERENCES pokemon
+  FOREIGN KEY (id) REFERENCES pokemon ON DELETE CASCADE
 );
 
 -- create abilities table
@@ -154,7 +154,7 @@ CREATE TABLE abilities (
   type varchar(55),
   text varchar(555),
   PRIMARY KEY (nameAbility),
-  FOREIGN KEY (id) REFERENCES pokemon
+  FOREIGN KEY (id) REFERENCES pokemon ON DELETE CASCADE
 );
 
 -- create weaknesses table
@@ -164,7 +164,7 @@ CREATE TABLE weaknesses (
   typeWeaknesses varchar(55),
   valueWeaknesses varchar(5), -- e.g. 1.5
   PRIMARY KEY (typeWeaknesses, valueWeaknesses),
-  FOREIGN KEY (id) REFERENCES pokemon
+  FOREIGN KEY (id) REFERENCES pokemon ON DELETE CASCADE
 );
 
 -- create resistance table
@@ -174,7 +174,7 @@ CREATE TABLE resistances (
   typeResistances varchar(55),
   valueResistances varchar(5), -- e.g. 0.5
   PRIMARY KEY (typeResistances, valueResistances),
-  FOREIGN KEY (id) REFERENCES pokemon
+  FOREIGN KEY (id) REFERENCES pokemon ON DELETE CASCADE
 );
 
 -------------------------------------
