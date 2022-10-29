@@ -28,4 +28,5 @@ INSERT INTO _cards_in_collections VALUES
 INSERT INTO _cards_in_decks VALUES
 (1, 1234, 'xy1-1', 4);
 
+-- shows all users
 SELECT * FROM users
