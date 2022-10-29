@@ -2,6 +2,18 @@
 -- DECLARATION ----------------
 -------------------------------
 
+DROP TABLE IF EXISTS resistances;
+DROP TABLE IF EXISTS weaknesses;
+DROP TABLE IF EXISTS abilities;
+DROP TABLE IF EXISTS attacks;
+DROP TABLE IF EXISTS pokemon;
+DROP TABLE IF EXISTS _cards_in_collections;
+DROP TABLE IF EXISTS _cards_in_decks;
+DROP TABLE IF EXISTS cards;
+DROP TABLE IF EXISTS sets;
+DROP TABLE IF EXISTS decks;
+DROP TABLE IF EXISTS users;
+
 -- create a user
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
