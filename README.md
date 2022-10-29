@@ -7,7 +7,7 @@ Luc - Card, Set, Collections, User, Deck <br/>
 -- I'm changing pokemon. Right now, it has FK references to attacks, abilities etc. But this makes it so those attacks, abilities are built-in to
    pokemon table, which would result in redundant info if pokemon has multiple items. I'm changing it so that FK references are in attacks, abilites etc.
    tables instead. <br/>
--- I simplified ER -> Relational conversion. Cards are now the user's collection; no separate collection table. Cards also have a count now. <br/>
+-- ~~I simplified ER -> Relational conversion. Cards are now the user's collection; no separate collection table. Cards also have a count now.~~ Cards are actually all cards in ALL user's collections. Still can use collection table for an individual user's collection. <br/>
 -- ~~Removing resistances, weaknesses table and putting them in pokemon. Since res/weak tables' primary keys are all of their attributes, there is no point in having them.~~ Never mind, could be more than one resistances or weaknesses, though I have not personally seen an example of that yet.
 
 In Progress - <br/>
