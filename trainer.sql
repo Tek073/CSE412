@@ -3,7 +3,7 @@ CREATE TABLE trainer (
   name varchar(55),
   text varchar(100),
   -- id is dependent on card table existing
-  id int NOT NULL REFERENCES card(id),
+  id int NOT NULL REFERENCES cards(id),
   PRIMARY KEY(id)
 );
 
