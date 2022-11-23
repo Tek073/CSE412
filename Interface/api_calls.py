@@ -11,7 +11,7 @@ from pokemontcgsdk import Subtype
 from pokemontcgsdk import Rarity
 
 from pokemontcgsdk import RestClient
-RestClient.configure('92e6be5e-7d21-4d3e-9900-1753c97c0979') # API key goes here
+RestClient.configure('') # API key goes here
 
 def addNewSet(user, setID):
         s = Set.find(setID)
