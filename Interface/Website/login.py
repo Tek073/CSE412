@@ -6,4 +6,4 @@ login = Blueprint('login', __name__)
 def home():
     var = ['help.html', 'style.html']
     
-    return render_template('help.html')
+    return render_template('login.html')
