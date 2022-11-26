@@ -1,6 +1,7 @@
 import sys
 
-from flask import Flask
+from flask import Flask, render_template, blueprints
+from Website import create_app
 from markupsafe import escape
 
 import psycopg2
@@ -17,10 +18,10 @@ from pokemontcgsdk import RestClient
 from connect import *
 
 DB_USER = "postgres"
-DB_PASS = "asdf"
+DB_PASS = "Conej0"
 DB_HOST = "localhost"
 DB_PORT = "5432"
-DB_NAME = "ptcg_db"
+DB_NAME = "Assign"
 
 # This was a test to get card info
 
@@ -89,12 +90,6 @@ print(user.id)
 #         user.logout()
 #         print("PostgreSQL connection is closed")
 
-app = Flask(__name__)
-
-@app.route("/")
-def main():
-    return "<p>Pokemon Trading Card Gallery!!!!!!!!!!!!!!!!!!!!!!</p>"
-
-@app.route("/<user_id>/decks")
-def decks(user_id = user.id, deck_id = user.decks):
-    return "<p>decks</p>"
+app = create_app()
+if __name__ == '__main__':
+    app.run(debug=True)
