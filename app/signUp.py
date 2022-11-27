@@ -2,7 +2,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from start import user
 
 
-signup = Blueprint('signUp', __name__)
+signup = Blueprint('signup', __name__)
 
 @signup.route('/', methods=['GET','POST'])
 def signup_page(): 
