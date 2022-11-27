@@ -1,0 +1,22 @@
+{% extends "navbar.html" %} {% block title %}{% endblock %} {% block content %}
+    <h1 align="center">Decks | PTCG Deck and Collection Manager</h1>
+    <div style="width: 50%; margin: auto">
+      {% for deckID, deckName in decks %}
+      <!-- <ul class="list-group list-group-flush" id="notes">
+      </ul> -->
+        <div style="padding: 20px; margin: 50px; background-color: aliceblue"
+          <p style="font-size: 24px">deckID: {{deckID}}, deckName: {{deckName}}</p>
+        </div>
+      {% endfor %}
+    </div>
+    <Label for="deck-search-by-ID">Search for card by ID</Label>
+    <input type="search" id="deck-search-by-ID" name="q">
+    <button>Search</button>
+    <form method="POST">
+      <textarea name="note" id="note" class="form-control"></textarea>
+      <br/>
+      <div align="center">
+        <button type="submit" class="btn btn-primary">Add Note</button>
+      </div>
+    </form>
+    {% endblock %}

@@ -84,9 +84,6 @@ from connect import *
 #         print("PostgreSQL connection is closed")
 
 app = create_app()
+
 if __name__ == '__main__':
     app.run(debug=True)
-
-@app.route("/<user_id>/decks")
-def decks(user_id = user.id, deck_id = user.decks):
-    return "<p>deckID: <deck_id></p>"

@@ -18,16 +18,37 @@ from pokemontcgsdk import RestClient
 # And a deck table, which draws from their collection
 
 from api_calls import *
+from global_items import *
+
+# returns list of cardIDs that match with search parameter
 
 class Collection:
     def __init__(self, id, conn):
         self.conn = conn
         self.id = id
         self.cursor = conn.cursor()
+    
+    # return cardIDs and counts of cards in collection, given search parameters
+    def search(self, **kwargs):
+        found = []
+        cardIDs = search_cards(self.cursor, **kwargs)
+        for cardID in cardIDs:
+            self.cursor.execute('''
+                SELECT cardID, count
+                FROM _cards_in_collections
+                WHERE userID = %s AND cardID = %s''',
+                (self.id, cardID))
+            found.append(self.cursor.fetchone())
+        return found
 
+    # add card by cardID into Collection
     def add(self, cardID):
+        #keys = kwargs.keys
         try:
-            addIfNewCard(self, cardID)
+            #addIfNewCard(self, **kwargs)
+            # self.cursor.execute('''SELECT cardID FROM cards WHERE cardID = %s''', keys["cardID"])
+            # self.cursor.execute('''SELECT cardID FROM cards WHERE cardID = %s''', keys["name"])
+
             self.cursor.execute('''
                 INSERT INTO _cards_in_collections
                 VALUES (%s, %s, 1);''', 
@@ -93,6 +114,9 @@ class Deck:
             ''',
             (self.id, deckID, deckName)
         )
+    def getAllDeckInfo(self):
+        self.cursor.execute('''SELECT deckID, deckname FROM decks WHERE userID = %s''', self.id)
+        return self.cursor.fetchall()
 
     def changeTo(self, deckID):
         self.deckID = deckID
@@ -102,6 +126,19 @@ class Deck:
 
     def size(self):
         self.cursor.execute(f"SELECT COUNT(*) FROM decks WHERE deckID = {self.deckNum}")
+
+    # returns cardIDs and counts for cards in deck, given parameters
+    def search(self, **kwargs):
+        found = []
+        cardIDs = search_cards(self.cursor, **kwargs)
+        for cardID in cardIDs:
+            self.cursor.execute('''
+                SELECT cardID, count
+                FROM decks
+                WHERE userID = %s AND deckID = %s AND cardID = %s''',
+                (self.id, self.deckID, cardID))
+            found.append(self.cursor.fetchone())
+        return found
 
     def add(self, deckID, cardID):
         try:
