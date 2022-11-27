@@ -3,12 +3,12 @@
     <form method="POST">
       <h3 align="center">Login</h3>
       <div class="form-group">
-        <label for="UserName">UserName</label>
+        <label for="username">UserName</label>
         <input
-          type="UserName"
+          type="username"
           class="form-control"
-          id="UserName"
-          name="UserName"
+          id="username"
+          name="username"
           placeholder="Enter UserName"
         />
       </div>
@@ -25,5 +25,14 @@
       </div>
       <br />
       <button type="submit" class="btn btn-primary">Login</button>
+      {% with messages = get_flashed_messages() %}
+ {% if messages %}
+  <ul>
+  {% for message in messages %}
+    <li>{{ message }}</li>
+  {% endfor %}
+  </ul>
+ {% endif %}
+{% endwith %}
     </form>
     {% endblock %}
