@@ -1,15 +1,17 @@
 from flask import Blueprint, render_template
-from Interface.__init__ import *
+from Interface.global_access import user
 
 decks = Blueprint('decks', __name__)
 
 @decks.route('/')
-def home():
+def list():
     decks = user.decks.getAllDeckInfo()
-    var = ['decks.html', 'style.html']
+    # var = ['decks.html', 'style.html']
     
-    return render_template('decks.html', )
+    return render_template('decks.html', decks=decks)
 
 @decks.route('/<deck_ID>')
-def edit():
-    var = ['deck_edit.html', 'style.html']
+def edit(deckID):
+    # var = ['deck_edit.html', 'style.html']
+
+    return render_template('deck_edit.html', deckID=deckID)

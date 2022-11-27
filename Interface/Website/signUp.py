@@ -1,5 +1,6 @@
 from flask import Blueprint, render_template, request, flash
 from connect import addUser
+
 signUp = Blueprint('signUp', __name__)
 
 @signUp.route('/SignUp', methods=['GET','POST'])

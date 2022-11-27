@@ -1,6 +1,5 @@
-from flask import Blueprint,Flask, render_template, request, flash, redirect, url_for
+from flask import Blueprint, render_template, request, flash, redirect, url_for
 from connect import DBConnection
-
 
 login = Blueprint('login', __name__)
 

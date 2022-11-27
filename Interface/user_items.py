@@ -1,24 +1,14 @@
 import sys
-import psycopg2
 from psycopg2 import Error
 from psycopg2 import *
-
-from pokemontcgsdk import Card
-from pokemontcgsdk import Set
-from pokemontcgsdk import Type
-from pokemontcgsdk import Supertype
-from pokemontcgsdk import Subtype
-from pokemontcgsdk import Rarity
-
 import re
-from pokemontcgsdk import RestClient
 
 # in SQL, the Cards and Sets table is shared among all users
 # Users will then have their own collection table, which draws from Cards
 # And a deck table, which draws from their collection
 
 from api_calls import *
-from global_items import *
+from global_access import *
 
 # returns list of cardIDs that match with search parameter
 
