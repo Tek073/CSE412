@@ -17,8 +17,7 @@ def home():
         print(user.cursor.rowcount)
         print("HERE")
         if(user.cursor.rowcount != 0):
-            
-            print()
+            return redirect(url_for('decks.home'))
         else:
             print("User Dont Exist")
             flash("Check Username and/or Password", category='error')
