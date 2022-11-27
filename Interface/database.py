@@ -17,12 +17,6 @@ from pokemontcgsdk import RestClient
 
 from connect import *
 
-DB_USER = "postgres"
-DB_PASS = "Conej0"
-DB_HOST = "localhost"
-DB_PORT = "5432"
-DB_NAME = "Assign"
-
 # This was a test to get card info
 
 #original_stdout = sys.stdout # Save a reference to the original standard output
@@ -45,7 +39,7 @@ DB_NAME = "Assign"
 
 user = DBConnection('asdf', 'asdf') # user in 'users' table; NOT the Database user, which will be the same for everyone
 
-str = 'asdf, adsf, asdf'
+str = 'asdf, asdf, asdf'
 asdf = user.cursor.mogrify('''
     INSERT INTO sets
     VALUES (%s);''',

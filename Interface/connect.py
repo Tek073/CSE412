@@ -4,10 +4,10 @@ from psycopg2 import *
 from user_items import *
 
 DB_USER = "postgres"
-DB_PASS = "Conej0"
-
+DB_PASS = "asdf" #"Conej0"
 DB_HOST = "localhost"
 DB_PORT = "5432"
+DB_NAME = "postgres" #"Assign"
 
 class DBConnection:
     def __init__(user, username, password): 
@@ -16,7 +16,7 @@ class DBConnection:
             password=DB_PASS, 
             host=DB_HOST, 
             port=DB_PORT, 
-            database='Assign') # one DB for all users
+            database=DB_NAME) # one DB for all users
 
         user.cursor = conn.cursor()
         print(user.cursor.connection)
