@@ -5,7 +5,8 @@ decks = Blueprint('decks', __name__)
 
 @decks.route('/')
 def list():
-    decks = user.decks.getAllDeckInfo()
+    if (user.id != 0):
+        decks = user.decks.getAllDeckInfo()
     # var = ['decks.html', 'style.html']
     
     return render_template('decks.html', decks=decks)

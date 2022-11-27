@@ -33,24 +33,25 @@ class User:
     # Default guest login
     def __init__(user, conn):
         user.conn = conn
-        user.cursor = user.conn.cursor()
+        user.cursor = conn.cursor()
         user.id = 0 # Guest ID
         user.cid = []  # cards in decks, list (deckID) of lists (cardID)
+        user.decks = Deck(user)
+        user.collection = Collection(user)
 
     # Takes username and password. Attempts to register new user with it; true if success, false otherwise
     def signup(user, username, password):
         conn = user.conn
         user.cursor = conn.cursor()
-        print(user.cursor.connection)
+        #print(user.cursor.connection)
 
         user.cursor.execute('''
             SELECT username
             FROM users
             WHERE username = %s;''',
-            (username)
+            (username,)
         )
-        if (user.cursor.fetchall() != None):
-            print("Username taken!")
+        if (user.cursor.fetchone() != None):
             return False
 
         user.cursor.execute('''
@@ -69,6 +70,7 @@ class User:
             SELECT FROM users;'''))
         conn.commit()
 
+        #user.id = id Not logging in yet; save it for login
         return True
 
     # Takes in username and password and attempts login. Returns true if success, otherwise false
@@ -84,12 +86,12 @@ class User:
             (username, password)
         )
 
-        tempID = user.cursor.fetchone()[0]
+        tempID = user.cursor.fetchone()
         if (tempID == None):
             return False
         user.id = tempID
-        user.collection = Collection(user.id, user.conn)
-        user.decks = Deck(user.id, user.conn)    
+        user.collection = Collection(user)
+        user.decks = Deck(user)
 
         return True
 

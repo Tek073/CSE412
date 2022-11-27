@@ -12,10 +12,12 @@ from globals import search_cards
 
 # returns list of cardIDs that match with search parameter
 
+# Requires conn, and userID to only get data belonging to user
 class Collection:
-    def __init__(self, id, conn):
+    def __init__(self, user):
+        conn = user.conn
         self.conn = conn
-        self.id = id
+        self.userID = user.id
         self.cursor = conn.cursor()
     
     # return cardIDs and counts of cards in collection, given search parameters
@@ -27,7 +29,7 @@ class Collection:
                 SELECT cardID, count
                 FROM _cards_in_collections
                 WHERE userID = %s AND cardID = %s''',
-                (self.id, cardID))
+                (self.userID, cardID))
             found.append(self.cursor.fetchone())
         return found
 
@@ -42,20 +44,20 @@ class Collection:
             self.cursor.execute('''
                 INSERT INTO _cards_in_collections
                 VALUES (%s, %s, 1);''', 
-                (self.id, cardID))
+                (self.userID, cardID))
         except KeyError:
             self.cursor.execute('''
                 UPDATE _cards_in_collections
                 SET count = count + 1
                 WHERE userID = %s AND cardID = %s;''', 
-                (self.id, cardID))
+                (self.userID, cardID))
 
     def subtract(self, cardID, count : int):
         self.cursor.execute('''
             SELECT count
             FROM _cards_in_collections
             WHERE userID = %s AND cardID = %s;''',
-            (self.id, cardID))
+            (self.userID, cardID))
         currCount = self.cursor.fetchone()[0]
 
         if (count > currCount):
@@ -65,47 +67,60 @@ class Collection:
             UPDATE _cards_in_collections
             SET count = count - %s
             WHERE userID = %s AND cardID = %s;''', 
-            (count, self.id, cardID))
+            (count, self.userID, cardID))
 
     def delete(self, cardID):
         self.cursor.execute('''
             DELETE FROM _cards_in_collections
             WHERE userID = %s AND cardID = %s;''', 
-            (self.id, cardID))
+            (self.userID, cardID))
 
     def get(self):
         self.cursor.execute(f"SELECT * FROM collection")
 
+# Requires conn, and userID to only get data belonging to user
 class Deck:
-    def __init__(self, id, conn):
+    def __init__(self, user):
+        conn = user.conn
+        self.userID = user.id
         self.conn = conn
-        self.id = id
         self.cursor = conn.cursor()
 
         self.cursor.execute('''
             SELECT deckID
             FROM decks
             WHERE userID = %s;''',
-            (self.id,)) 
+            (self.userID,)) 
         
-        self.deckIDList = self.cursor.fetchall() # array of ints
-        self.numDecks = len(self.deckIDList) # deckID from 1-10
-        self.deckID = self.deckIDList[0] # arbitrarily make default deckID 1st one in list
+        temp = self.cursor.fetchall()
+        print(temp)
+        # If at least 1 deck
+        if (len(temp) > 0): # fetchall does not return None
+            self.deckIDList = temp # list of ints
+            self.numDecks = len(self.deckIDList) # deckID from 1-10
+            self.deckID = self.deckIDList[0] # arbitrarily make default deckID 1st one in list
+        # else if no decks
+        else:
+            self.deckIDList = []
+            self.numDecks = 0
+            self.deckID = 0
 
     def create(self, deckName):
         if (self.numDecks >= 10):
             return
         deckID = self.numDecks
-        self.numDecks += 1
         
         self.cursor.execute('''
             INSERT INTO decks
             VALUES (%s, %s, %s);
             ''',
-            (self.id, deckID, deckName)
+            (self.userID, deckID, deckName)
         )
+        self.numDecks += 1
+        self.deckIDList.append(self.numDecks)
+
     def getAllDeckInfo(self):
-        self.cursor.execute('''SELECT deckID, deckname FROM decks WHERE userID = %s''', self.id)
+        self.cursor.execute('''SELECT deckID, deckname FROM decks WHERE userID = %s''', self.userID)
         return self.cursor.fetchall()
 
     def changeTo(self, deckID):
@@ -126,7 +141,7 @@ class Deck:
                 SELECT cardID, count
                 FROM decks
                 WHERE userID = %s AND deckID = %s AND cardID = %s''',
-                (self.id, self.deckID, cardID))
+                (self.userID, self.deckID, cardID))
             found.append(self.cursor.fetchone())
         return found
 
@@ -135,7 +150,7 @@ class Deck:
             self.cursor.execute('''
                 INSERT INTO _cards_in_decks
                 VALUES (%s, %s, %s, 1);''',
-                (self.id, deckID, cardID))
+                (self.userID, deckID, cardID))
         except KeyError: #card already exists in deck; increment count instead
             self.cursor.execute('''
                 SELECT count

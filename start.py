@@ -5,7 +5,8 @@ from app import create_app
 from markupsafe import escape
 from interface.connect import *
 
-conn = DBConnection() # user in 'users' table; NOT the Database user, which will be the same for everyone
+DBconn = DBConnection() # user in 'users' table; NOT the Database user, which will be the same for everyone
+conn = DBconn.conn
 user = User(conn)
 #user.login(username='asdf', password='asdf')
 

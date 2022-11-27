@@ -8,11 +8,11 @@ def create_app():
     from .decks import decks
     from .deckManager import deckManager
     from .login import login
-    from .signUp import signUp
+    from .signup import signup
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(decks, url_prefix='/decks')
     app.register_blueprint(deckManager, url_prefix='/')
     app.register_blueprint(login, url_prefix='/login')
-    app.register_blueprint(signUp, url_prefix='/sign_up')
+    app.register_blueprint(signup, url_prefix='/sign_up')
 
     return app
