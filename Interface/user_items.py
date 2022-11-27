@@ -12,7 +12,6 @@ from pokemontcgsdk import Rarity
 
 import re
 from pokemontcgsdk import RestClient
-#RestClient.configure('92e6be5e-7d21-4d3e-9900-1753c97c0979') # API key goes here
 
 # in SQL, the Cards and Sets table is shared among all users
 # Users will then have their own collection table, which draws from Cards
@@ -79,7 +78,7 @@ class Deck:
             (self.id,)) 
         
         self.deckIDList = self.cursor.fetchall() # array of ints
-        self.numDecks = len(self.deckIDList)
+        self.numDecks = len(self.deckIDList) # deckID from 1-10
         self.deckID = self.deckIDList[0] # arbitrarily make default deckID 1st one in list
 
     def create(self, deckName):

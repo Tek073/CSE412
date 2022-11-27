@@ -37,7 +37,9 @@ from connect import *
 #     sys.stdout = original_stdout # Reset the standard output to its original value
 #     exit
 
-user = DBConnection('asdf', 'asdf') # user in 'users' table; NOT the Database user, which will be the same for everyone
+
+
+user = User(username='asdf', password='asdf') # user in 'users' table; NOT the Database user, which will be the same for everyone
 
 str = 'asdf, asdf, asdf'
 asdf = user.cursor.mogrify('''
@@ -87,3 +89,7 @@ print(user.id)
 app = create_app()
 if __name__ == '__main__':
     app.run(debug=True)
+
+@app.route("/<user_id>/decks")
+def decks(user_id = user.id, deck_id = user.decks):
+    return "<p>deckID: <deck_id></p>"

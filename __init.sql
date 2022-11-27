@@ -100,7 +100,7 @@ CREATE TABLE _cards_in_decks (
   count int, -- Using count variable allows duplicates, since it doesn't make the primary key refer to more than 1 row
              -- Count variable preferable to, e.g. deckSlot, since mixing insert/delete doesn't mess it up
  
-  PRIMARY KEY (deckID, cardID),
+  PRIMARY KEY (userID, deckID, cardID),
   FOREIGN KEY (deckID) REFERENCES decks, -- checks deck exists
   FOREIGN KEY (cardID) REFERENCES cards ON DELETE CASCADE-- checks card exists in collection
 );
