@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from Interface.global_access import user
+from start import user
 
 decks = Blueprint('decks', __name__)
 

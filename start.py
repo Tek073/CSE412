@@ -1,11 +1,14 @@
 import sys
 
 from flask import Flask, render_template, blueprints
-from Interface.Website import create_app
+from app import create_app
 from markupsafe import escape
-from .connect import *
+from interface.connect import *
 
-user = DBConnection('asdf', 'asdf') # user in 'users' table; NOT the Database user, which will be the same for everyone
+conn = DBConnection() # user in 'users' table; NOT the Database user, which will be the same for everyone
+user = User(conn)
+#user.login(username='asdf', password='asdf')
+
 if(user.cursor.rowcount != 0):
     print('Connected')
 

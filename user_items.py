@@ -7,8 +7,8 @@ import re
 # Users will then have their own collection table, which draws from Cards
 # And a deck table, which draws from their collection
 
-from api_calls import *
-from global_access import *
+from interface.api_calls import *
+from globals import search_cards
 
 # returns list of cardIDs that match with search parameter
 
