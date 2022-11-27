@@ -1,8 +1,18 @@
 from flask import Flask
+import psycopg2
+from psycopg2 import Error
+from psycopg2 import *
+from user_items import *
+from flask import flash
+from connect import DBConnection
 
 def create_app():
     app = Flask(__name__)
     app.config['SECRET_KEY'] = 'asdf'
+    user = DBConnection('asdf','asdf')
+    
+    if(user.cursor.rowcount != 0):
+        print('Connected')
     from .views import views
     from .decks import decks
     from .deckManager import deckManager

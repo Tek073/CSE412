@@ -1,9 +1,28 @@
-from flask import Blueprint, render_template
+from flask import Blueprint,Flask, render_template, request, flash, redirect, url_for
+from connect import DBConnection
+
 
 login = Blueprint('login', __name__)
 
-@login.route('/Login')
+@login.route('/Login', methods=['GET', 'POST'])
 def home():
-    var = ['help.html', 'style.html']
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+
+        user = DBConnection(username, password)
+        if(user.cursor.rowcount != 0):
+            print('Connected')
+        
+        print(user.cursor.rowcount)
+        print("HERE")
+        if(user.cursor.rowcount != 0):
+            
+            print()
+        else:
+            print("User Dont Exist")
+            flash("Check Username and/or Password", category='error')
+            
+        
     
     return render_template('login.html')

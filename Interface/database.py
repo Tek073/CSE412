@@ -4,7 +4,6 @@ from flask import Flask, render_template, blueprints
 from Website import create_app
 from markupsafe import escape
 
-import psycopg2
 from psycopg2 import Error
 
 from pokemontcgsdk import Card
@@ -43,16 +42,16 @@ DB_NAME = "Assign"
 #     sys.stdout = original_stdout # Reset the standard output to its original value
 #     exit
 
-user = DBConnection('asdf', 'asdf') # user in 'users' table; NOT the Database user, which will be the same for everyone
+# user = DBConnection('asdf', 'asdf') # user in 'users' table; NOT the Database user, which will be the same for everyone
 
-str = 'asdf, adsf, asdf'
-asdf = user.cursor.mogrify('''
-    INSERT INTO sets
-    VALUES (%s);''',
-    (str,) # psycopg2 tries to index into input, i.e. iterate over it. So we turn it into a tuple to allow this.
-)
-user_id = user.id
-print(user.id)
+# str = 'asdf, adsf, asdf'
+# asdf = user.cursor.mogrify('''
+#     INSERT INTO sets
+#     VALUES (%s);''',
+#     (str,) # psycopg2 tries to index into input, i.e. iterate over it. So we turn it into a tuple to allow this.
+# )
+# user_id = user.id
+# print(user.id)
 
 # try:
 
