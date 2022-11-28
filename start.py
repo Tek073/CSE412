@@ -3,7 +3,9 @@ import sys
 from flask import Flask, render_template, blueprints
 from app import create_app
 from markupsafe import escape
-from interface.connect import *
+
+from db_access.connect import DBConnection
+from db_access.user_tables import User
 
 DBconn = DBConnection() # user in 'users' table; NOT the Database user, which will be the same for everyone
 conn = DBconn.conn

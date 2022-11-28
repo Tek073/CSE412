@@ -7,11 +7,82 @@ import re
 # Users will then have their own collection table, which draws from Cards
 # And a deck table, which draws from their collection
 
-from interface.api_calls import *
+from .api_calls import *
 from globals import search_cards
 
-# returns list of cardIDs that match with search parameter
+class User:
+    # Default guest login
+    def __init__(user, conn):
+        user.conn = conn
+        user.cursor = conn.cursor()
 
+        user.id = 0 # Guest ID
+        user.username = 'Guest'
+        user.cid = []  # cards in decks, list (deckID) of lists (cardID)
+        user.decks = Deck(user)
+        user.collection = Collection(user)
+
+    # Takes username and password. Attempts to register new user with it; true if success, false otherwise
+    def signup(user, username, password):
+        conn = user.conn
+        user.cursor = conn.cursor()
+        #print(user.cursor.connection)
+
+        user.cursor.execute('''
+            SELECT username
+            FROM users
+            WHERE username = %s;''',
+            (username,)
+        )
+        if (user.cursor.fetchone() != None):
+            return False
+
+        user.cursor.execute('''
+        SELECT COUNT(*) FROM users;'''
+        )
+        print("COUNT")
+        results = user.cursor.fetchone()[0]
+        id = results + 1
+
+        user.cursor.execute('''
+            INSERT INTO users
+            VALUES (%s, %s, %s);''',
+            (id, username, password)
+        )
+        print(user.cursor.execute('''
+            SELECT FROM users;'''))
+        conn.commit()
+
+        #user.id = id Not logging in yet; save it for login
+        return True
+
+    # Takes in username and password and attempts login. Returns true if success, otherwise false
+    def login(user, username, password):
+        # keys = kwargs.keys()
+        # if all(k in keys for k in ['username', 'password']):
+        #     username = kwargs['username']
+        #     password = kwargs['password']
+        user.cursor.execute('''
+            SELECT userID
+            FROM users
+            WHERE username = %s AND password = %s;''',
+            (username, password)
+        )
+
+        tempID = user.cursor.fetchone()
+        if (tempID == None):
+            return False
+        user.username = username
+        user.id = tempID
+        user.collection = Collection(user)
+        user.decks = Deck(user)
+
+        return True
+
+    # Logs out the user, by setting userID to guestID, 0
+    def logout(user):
+        user.id = 0
+##############################################################
 # Requires conn, and userID to only get data belonging to user
 class Collection:
     def __init__(self, user):
@@ -77,7 +148,7 @@ class Collection:
 
     def get(self):
         self.cursor.execute(f"SELECT * FROM collection")
-
+##############################################################
 # Requires conn, and userID to only get data belonging to user
 class Deck:
     def __init__(self, user):
@@ -99,11 +170,13 @@ class Deck:
             self.deckIDList = temp # list of ints
             self.numDecks = len(self.deckIDList) # deckID from 1-10
             self.deckID = self.deckIDList[0] # arbitrarily make default deckID 1st one in list
+            self.deckName = 'placeholder'
         # else if no decks
         else:
             self.deckIDList = []
             self.numDecks = 0
             self.deckID = 0
+            self.deckName = 'default'
 
     def create(self, deckName):
         if (self.numDecks >= 10):
@@ -120,7 +193,7 @@ class Deck:
         self.deckIDList.append(self.numDecks)
 
     def getAllDeckInfo(self):
-        self.cursor.execute('''SELECT deckID, deckname FROM decks WHERE userID = %s''', self.userID)
+        self.cursor.execute('''SELECT deckID, deckname FROM decks WHERE userID = %s''', (self.userID,))
         return self.cursor.fetchall()
 
     def changeTo(self, deckID):

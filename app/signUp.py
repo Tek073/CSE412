@@ -2,9 +2,9 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 from start import user
 
 
-sign_up = Blueprint('signUp', __name__)
+signup = Blueprint('signup', __name__)
 
-@sign_up.route('/', methods=['GET','POST'])
+@signup.route('/', methods=['GET','POST'])
 def signup_page(): 
     if request.method == 'POST':
         username = request.form.get('username')

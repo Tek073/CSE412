@@ -4,9 +4,12 @@
       {% for deckID, deckName in decks %}
       <!-- <ul class="list-group list-group-flush" id="notes">
       </ul> -->
+      <a href="/{{username}}/{{deckName}}">
         <div style="padding: 20px; margin: 50px; background-color: aliceblue"
           <p style="font-size: 24px">deckID: {{deckID}}, deckName: {{deckName}}</p>
+          <img src="/static/pkmncard_back.png">
         </div>
+      </a>
       {% endfor %}
     </div>
     <Label for="deck-search-by-ID">Search for card by ID</Label>
