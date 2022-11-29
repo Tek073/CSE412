@@ -15,7 +15,6 @@ DROP TABLE IF EXISTS decks;
 DROP TABLE IF EXISTS users;
 
 -- create a user
-DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   userID int,
   username varchar(255),
@@ -25,7 +24,6 @@ CREATE TABLE users (
 );
 
 -- create a user's deck
-DROP TABLE IF EXISTS decks;
 CREATE TABLE decks (
   userID int,
   deckID int,
@@ -36,7 +34,6 @@ CREATE TABLE decks (
 );
 
 -- list of sets that cards from all users belong to
-DROP TABLE IF EXISTS sets;
 CREATE TABLE sets (
   setID VARCHAR(20), -- e.g. "swsh1"
 
@@ -61,7 +58,6 @@ CREATE TABLE sets (
 );
 
 --- this is collection of cards across ALL users
-DROP TABLE IF EXISTS cards;
 CREATE TABLE cards (
   cardID VARCHAR(20),
 
@@ -69,21 +65,21 @@ CREATE TABLE cards (
   supertype VARCHAR(20), -- e.g. pokemon, energy, trainer
   subtypes VARCHAR(30) ARRAY[10], -- Basic, EX, Mega, Rapid Strike etc.
   types VARCHAR(30) ARRAY[10],
-  rules VARCHAR(255) ARRAY[10],
+  rules VARCHAR(1000) ARRAY[10], -- some rules get REALLY long
 
   setID VARCHAR(20), -- if setID does not exist in sets, add it to sets.
 
-  number VARCHAR(4), -- # in set. Assuming set size < 1000
+  number VARCHAR(10), -- # in set
   artist VARCHAR(50),
   rarity VARCHAR(30), -- e.g. "Common", "Rare Rainbow"
-  flavorText VARCHAR(500),
+  flavorText VARCHAR(500), 
 
   unlLeg VARCHAR(10),
   expLeg VARCHAR(10),
   stdLeg VARCHAR(10),
   --legalities CHAR(10) ARRAY[VARCHAR(20)];
 
-  regMark CHAR(1), -- Letter symbol
+  regMark VARCHAR(10), -- Letter symbol
   smallImage VARCHAR(255), -- URL
   largeImage VARCHAR(255), -- URL; could be quite long
   
@@ -92,7 +88,6 @@ CREATE TABLE cards (
 );
 
 -- decks have 1-60 cards, and up to 4 duplicates
-DROP TABLE IF EXISTS _cards_in_decks;
 CREATE TABLE _cards_in_decks (
   userID int,
   deckID int,
@@ -107,7 +102,6 @@ CREATE TABLE _cards_in_decks (
 
 -- b/c there are multiple users, there are multiple collections. 
 -- So so need a way to determine from all users' cards, which ones belong to a certain user
-DROP TABLE IF EXISTS _cards_in_collections;
 CREATE TABLE _cards_in_collections (
   userID int,
   cardID VARCHAR(20),
@@ -118,63 +112,55 @@ CREATE TABLE _cards_in_collections (
 );
 
 -- extra pokemon info
-DROP TABLE IF EXISTS pokemon;
 CREATE TABLE pokemon (
-  id VARCHAR(20),
+  cardID VARCHAR(20),
   level int,
   hp int,
-  pxdx int,
-  evolvesTo varchar(55),
+  nationalPokedexNumbers int ARRAY[10],
   evolvesFrom varchar(55),
-  -- typeWeaknesses varchar(55),
-  -- valueWeaknesses varchar(5), -- e.g. 1.5
-  -- typeResistances varchar(55),
-  -- valueResistances varchar(5), -- e.g. 0.5
-  PRIMARY KEY (id),
-  FOREIGN KEY (id) REFERENCES cards ON DELETE CASCADE -- inherits card info
+  evolvesTo varchar(55),
+  PRIMARY KEY (cardID),
+  FOREIGN KEY (cardID) REFERENCES cards ON DELETE CASCADE -- inherits card info
 );
 
 -- create table attacks
-DROP TABLE IF EXISTS attacks;
 CREATE TABLE attacks (
-  id VARCHAR(20),
-  nameAttack varchar(55) NOT NULL,
-  cost int,
-  damage int,
-  text varchar(555),
-  PRIMARY KEY (id, nameAttack),
-  FOREIGN KEY (id) REFERENCES pokemon ON DELETE CASCADE
+  cardID VARCHAR(20),
+  name varchar(500) NOT NULL,
+  cost VARCHAR(50) ARRAY[50], -- change from int to varchar
+  convertedEnergyCost int, -- added new attribute
+  damage VARCHAR(501), -- some damage has text describing certain cases
+  text varchar(1500),
+  PRIMARY KEY (cardID, name),
+  FOREIGN KEY (cardID) REFERENCES pokemon ON DELETE CASCADE
 );
 
 -- create abilities table
-DROP TABLE IF EXISTS abilities;
 CREATE TABLE abilities (
-  id VARCHAR(20),
-  nameAbility varchar(55) NOT NULL,
+  cardID VARCHAR(20),
+  name varchar(55) NOT NULL,
   type varchar(55),
-  text varchar(555),
-  PRIMARY KEY (nameAbility),
-  FOREIGN KEY (id) REFERENCES pokemon ON DELETE CASCADE
+  text varchar(1500), -- There is some huge text apparently
+  PRIMARY KEY (cardID, name), 
+  FOREIGN KEY (cardID) REFERENCES pokemon ON DELETE CASCADE
 );
 
 -- create weaknesses table
-DROP TABLE IF EXISTS weaknesses;
 CREATE TABLE weaknesses (
-  id varchar(20),
-  typeWeaknesses varchar(55),
-  valueWeaknesses varchar(5), -- e.g. 1.5
-  PRIMARY KEY (typeWeaknesses, valueWeaknesses),
-  FOREIGN KEY (id) REFERENCES pokemon ON DELETE CASCADE
+  cardID varchar(20),
+  type varchar(55),
+  value varchar(55), -- e.g. 1.5
+  PRIMARY KEY (cardID, type, value),
+  FOREIGN KEY (cardID) REFERENCES pokemon ON DELETE CASCADE
 );
 
 -- create resistance table
-DROP TABLE IF EXISTS resistances;
 CREATE TABLE resistances (
-  id varchar(20),
-  typeResistances varchar(55),
-  valueResistances varchar(5), -- e.g. 0.5
-  PRIMARY KEY (typeResistances, valueResistances),
-  FOREIGN KEY (id) REFERENCES pokemon ON DELETE CASCADE
+  cardID varchar(20),
+  type varchar(55),
+  value varchar(55), -- e.g. 0.5
+  PRIMARY KEY (cardID, type, value),
+  FOREIGN KEY (cardID) REFERENCES pokemon ON DELETE CASCADE
 );
 
 -------------------------------------
@@ -183,40 +169,41 @@ CREATE TABLE resistances (
 
 -- Inserting some cards
 -- There is a hiearachy to inserts; sets -> cards -> pokemon -> attacks, abilities, types
-INSERT INTO sets VALUES
-('swsh9', 'Sword & Shield Brilliant Stars', 'Sword & Shield Brilliant Stars', 172, 999, 'Legal', 'Banned', NULL, 'Blah', 'Blah', 'Blah', 
-  'https://images.pokemontcg.io/swsh9/symbol.png', 'https://images.pokemontcg.io/swsh9/logo.png');
-INSERT INTO cards VALUES 
-('swsh9-87', 'Weavile', 'Pokemon', '{"Basic"}', '{"Darkness"}', '{"Rules go here"}', 
-  'swsh9', 150, 'Hasuno', 'Common', 'Flavor Text', 'Legal', 'Banned', NULL,
-  'F', 'https://images.pokemontcg.io/swsh9/87.png', 'https://images.pokemontcg.io/swsh9/87_hires.png');
-INSERT INTO pokemon VALUES
-('swsh9-87', 10, 100, 461, 'Sneasel', NULL);
-INSERT INTO attacks VALUES
-('swsh9-87', 'Ransack', 1, 0, 'Flip 2 coins. If either of them is heads, your opponent reveals their hand. 
-  For each heads, choose a card you find there and put it on the bottom of your opponent’s deck in any order.'),
-('swsh9-87', 'Slash', 3, 100, NULL);
-INSERT INTO weaknesses VALUES 
-('swsh9-87', 'Grass', '2');
--- no resistances
--- no abilities
 
-INSERT INTO sets VALUES
-('xy1', 'XY', 'XY', 146, 146, 'Legal', 'Legal', NULL, 'XY', '2014/02/05', '2018/03/04 10:35:00', 
-  'https://images.pokemontcg.io/xy1/symbol.png', 'https://images.pokemontcg.io/xy1/logo.png');
-INSERT INTO cards VALUES 
-('xy1-1', 'Venusaur-EX', 'Pokemon', '{"Basic", "EX"}', '{"Grass"}', '{"Pokémon-EX rule: When a Pokémon-EX has been Knocked Out, your opponent takes 2 Prize cards."}', 
-  'xy1', 1, 'Eske Yoshinob', 'Rare Holo EX', NULL, 'Legal', 'Legal', NULL,
-  NULL, 'https://images.pokemontcg.io/xy1/1.png', 'https://images.pokemontcg.io/xy1/1_hires.png');
-INSERT INTO pokemon VALUES
-('xy1-1', 10, 180, 461, NULL, NULL);
-INSERT INTO attacks VALUES
-('xy1-1', 'Poison Powder', 3, 60, 'Your opponent''s Active Pokémon is now Poisoned.'),
-('xy1-1', 'Jungle Hammer', 4, 90, 'Heal 30 damage from this Pokémon.');
-INSERT INTO weaknesses VALUES 
-('xy1-1', 'Fire', '2');
--- no resistances
--- no abilities
+-- INSERT INTO sets VALUES
+-- ('swsh9', 'Sword & Shield Brilliant Stars', 'Sword & Shield Brilliant Stars', 172, 999, 'Legal', 'Banned', NULL, 'Blah', 'Blah', 'Blah', 
+--   'https://images.pokemontcg.io/swsh9/symbol.png', 'https://images.pokemontcg.io/swsh9/logo.png');
+-- INSERT INTO cards VALUES 
+-- ('swsh9-87', 'Weavile', 'Pokemon', '{"Basic"}', '{"Darkness"}', '{"Rules go here"}', 
+--   'swsh9', 150, 'Hasuno', 'Common', 'Flavor Text', 'Legal', 'Banned', NULL,
+--   'F', 'https://images.pokemontcg.io/swsh9/87.png', 'https://images.pokemontcg.io/swsh9/87_hires.png');
+-- INSERT INTO pokemon VALUES
+-- ('swsh9-87', 10, 100, 461, 'Sneasel', NULL);
+-- INSERT INTO attacks VALUES
+-- ('swsh9-87', 'Ransack', 1, 0, 'Flip 2 coins. If either of them is heads, your opponent reveals their hand. 
+--   For each heads, choose a card you find there and put it on the bottom of your opponent’s deck in any order.'),
+-- ('swsh9-87', 'Slash', 3, 100, NULL);
+-- INSERT INTO weaknesses VALUES 
+-- ('swsh9-87', 'Grass', '2');
+-- -- no resistances
+-- -- no abilities
+
+-- INSERT INTO sets VALUES
+-- ('xy1', 'XY', 'XY', 146, 146, 'Legal', 'Legal', NULL, 'XY', '2014/02/05', '2018/03/04 10:35:00', 
+--   'https://images.pokemontcg.io/xy1/symbol.png', 'https://images.pokemontcg.io/xy1/logo.png');
+-- INSERT INTO cards VALUES 
+-- ('xy1-1', 'Venusaur-EX', 'Pokemon', '{"Basic", "EX"}', '{"Grass"}', '{"Pokémon-EX rule: When a Pokémon-EX has been Knocked Out, your opponent takes 2 Prize cards."}', 
+--   'xy1', 1, 'Eske Yoshinob', 'Rare Holo EX', NULL, 'Legal', 'Legal', NULL,
+--   NULL, 'https://images.pokemontcg.io/xy1/1.png', 'https://images.pokemontcg.io/xy1/1_hires.png');
+-- INSERT INTO pokemon VALUES
+-- ('xy1-1', 10, 180, 461, NULL, NULL);
+-- INSERT INTO attacks VALUES
+-- ('xy1-1', 'Poison Powder', 3, 60, 'Your opponent''s Active Pokémon is now Poisoned.'),
+-- ('xy1-1', 'Jungle Hammer', 4, 90, 'Heal 30 damage from this Pokémon.');
+-- INSERT INTO weaknesses VALUES 
+-- ('xy1-1', 'Fire', '2');
+-- -- no resistances
+-- -- no abilities
 
 -- data from API call -- 
 -- (Card(abilities=None, artist='Eske Yoshinob', ancientTrait=None, attacks=[Attack(name='Poison Powder', cost=['Grass', 'Colorless', 'Colorless'], convertedEnergyCost=3, damage='60', 

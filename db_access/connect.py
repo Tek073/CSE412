@@ -7,27 +7,27 @@ DB_USER = "postgres"
 DB_PASS = "asdf" #"Conej0"
 DB_HOST = "localhost"
 DB_PORT = "5432"
-DB_NAME = "postgres" #"Assign"
+DB_NAME = "PTCG_DB" #"postgres" #"Assign"
 
 class DBConnection:
     # Establishes DB connection
     def __init__(DB): 
+        print(DB_USER, DB_PASS, DB_HOST, DB_PORT, DB_NAME)
         DB.conn = connect( 
             user=DB_USER,
             password=DB_PASS, 
             host=DB_HOST, 
             port=DB_PORT, 
             database=DB_NAME) # one DB for all users
-        DB.cursor = DB.conn.cursor()
-        DB.cursor.execute("SELECT version();")
-        record = DB.cursor.fetchone()
+        DB.cur = DB.conn.cursor()
+        DB.cur.execute("SELECT version();")
+        record = DB.cur.fetchone()
         print("You are connected to - ", record, "\n")
 
     # Close the DB connection
     def close(DB):
-        DB.cursor.close()
+        DB.cur.close()
         DB.conn.close()
-
 
 
 # class addUser:
