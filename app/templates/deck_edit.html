@@ -1,47 +1,52 @@
 {% extends "navbar.html" %} {% block title %} Decks | PTCG Deck and Collection Manager {% endblock %} {% block content %}
+  <style>
+    body {
+      background-image: url('/static/scenery.png');
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: 100% 100%;
+
+    }
+  </style>
 <p>
 <form method="POST" style="padding: 20px; margin-left: auto;">
   <!-- 'settings' class lines up 2 items next to each other. see navbar.html for details -->
     <div class="settings">
-      <Label for="search-name">Name:</Label><input type="text" name="search-name">
-
-      <Label for="search-supertype">Supertype:</Label><input type="text" name="search-supertype">
-
-      <Label for="search-subtype">Subtype:</Label><input type="text" name="search-subtype">
-
-      <Label for="search-types">Types:</Label><input type="text" name="search-types">
-
-      <Label for="search-rules">Rules:</Label><input type="text" name="search-rules">
-
-      <Label for="search-setid">SetID:</Label><input type="text" name="search-setid">
-
-      <Label for="search-num">Number in set:</Label><input type="text" name="search-num">
-
-      <Label for="search-artist">Artist:</Label><input type="text" name="search-artist">
-
-      <Label for="search-rarity">Rarity:</Label><input type="text" name="search-rarity">
-
-      <Label for="search-flavortext">Flavor text:</Label><input type="text" name="search-flavortext">
+      <Label>Name:</Label><input placeholder="Venusaur, Charizard..." type="search" name="name">
+      <Label>Supertype:</Label><input placeholder="Pokemon, Trainer, Energy..." type="search" name="supertype">
+      <Label>Subtypes:</Label><input placeholder="Basic, MEGA, VMAX..." type="search" name="subtypes">
+      <Label>Types:</Label><input placeholder="Darkness, Colorless, Psychic..."type="search" name="types">
+      <Label>Rules:</Label><input placeholder="Flip a coin..."type="search" name="rules">
+      <Label>SetID:</Label><input placeholder="swsh9-87, xy1-23, xy5-105..." type="search" name="setID">
+      <Label>Number in set:</Label><input placeholder="1, 23, 108..." type="search" name="number">
+      <Label>Artist:</Label><input placeholder="Saya Tsuruta, Yuka Morii..." type="search" name="artist">
+      <Label>Rarity:</Label><input placeholder="Common, Rare Holo EX, Promo..."type="search" name="rarity">
+      <Label>Flavor text:</Label><input placeholder="As it flies around, it shoots lightning all over..."type="search" name="flavortext">
+      <!-- Its nictitating membranes let it pick out foes'' weak points -->
+      <!-- They thump their bones rhythmically... -->
     </div>
       <Label style="font-weight: 900; text-align:center">Legality of Formats</Label>
-    <div class="settings">
-      <Label for="unl-leg">Unlimited:</Label><input type="checkbox">
-      <Label for="unl-leg">Expanded:</Label><input type="checkbox">
-      <Label for="unl-leg">Standard:</Label><input type="checkbox">
-      <br><input type="submit" value="Search" style="width:200px">
+    <div class="radio_settings" style="text-align:justify">
+      <Label>Unlimited: y/n</Label> <input name="unlLeg" value="Legal" type="radio" checked>
+                                    <input name="unlLeg" value=Illegal type="radio">
+      <Label>Expanded: y/n</Label>  <input name="expLeg" value="Legal" type="radio" checked>
+                                    <input name="expLeg" value=Illegal type="radio">
+      <Label>Standard: y/n</Label>  <input name="stdLeg" value="Legal" type="radio" checked>
+                                    <input name="stdLeg" value=Illegal type="radio">
     </div>
-      
+    <div class="settings">
+      <input type="submit" name="search-deck" value="Search decks">
+      <input type="submit" name="search-collection" value="Search collection">
+    </div>
     </form>
-  </p>    
-
-    <div style="width: 50%; margin: auto">
+    <div class="settings" style="padding-block-end: 50px; grid-template-columns: 300px 300px 300px; margin:auto; align-items:flex-end;">
       <!-- passing id makes it easy to pass-back id, which makes it easy to edit cards in some other file-->
       {% set num = namespace(value=0) %}
       {% for id, name, count, imageURL in cardInfo %}
         {% for i in range(count) %}
           {% set num.value = num.value + 1 %}
           <a href="{{url_for('decks.card_edit', deckID=deck.deckID, cardID=id)}}">
-            <div style="padding: 20px; margin: 50px; background-color: aliceblue">
+            <div width="300px" style="margin: auto; background-color: aliceblue">
               <p style="font-size: 12px">{{id}}</p>
               <p style="font-size: 24px">{{name}}</p>
               <img src="{{imageURL}}" width="300px">
@@ -51,11 +56,11 @@
       {% endfor %}
     </div>
     
-    <form method="POST">
+    <!-- <form method="POST">
       <Label for="search">Input search parameters</Label>
       <textarea name="search" id="asdf" class="form-control"></textarea>
-      <!-- <input type="search" id="sc" name="search-collection"> -->
+      <!-- <input type="search" id="sc" name="search-collection"> 
       <input for="search" type="submit" name="search-collection" value="Search Collection"></button>
       <input for="search" type="submit" name="search-deck" value="Search Deck"></button>
-    </form>
+    </form> -->
     {% endblock %}

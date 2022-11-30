@@ -10,7 +10,7 @@ from db_access.user_tables import User
 DBconn = DBConnection() # user in 'users' table; NOT the Database user, which will be the same for everyone
 conn = DBconn.conn
 user = User(conn)
-#user.login(username='asdf', password='asdf')
+user.login(username='a', password='a')
 
 if(user.cursor.rowcount != 0):
     print('Connected')

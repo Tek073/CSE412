@@ -31,11 +31,21 @@ def edit(deckID):
     user.decks.changeTo(deckID) 
 
     if request.method == 'POST':
-        print(request.form)
-        if request.form.get('search-collection') != None:
-            user.collection.search(request.args)
-        if request.form.get('search-deck') != None:
-            user.decks.searchOne(request.args)
+        data = dict(request.form)
+        temp = dict(data) # create copy of data, so we can delete key-value pairs during iteration
+        for key in temp:
+            if temp[key] == '':
+                del data[key]
+        print(data)
+        w = ' AND '.join(cur.mogrify('%s = %%s' % key, [data[key]]).decode() for key in data)
+        print(w)
+        
+        if data.get('search-collectiona') != None:
+            del data['search-collection']
+            user.collection.search(data)
+        if data.get('search-deck') != None:
+            del data['search-deck']
+            user.decks.search(data)
 
     cur.execute('''
         SELECT c.cardID, c.name, count, largeImage

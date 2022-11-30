@@ -6,28 +6,36 @@
     <input style="width: 350px" placeholder="Card Name(ex. Charmander, dialga)" type="text" name="cardName" required>
     <input type="submit" value="Search Card Database" name="search">
   </form>
-  
+
+  <div id='error' onerror="
+  this.src='/static/error.png';
+  this.onerror=null;"
+  ></div>
+
   <div>
-    {% if cards | length != 0 %}
-    {% for cardID, name, largeImage, types in cards %}
-    <!-- <ul class="list-group list-group-flush" id="notes">
-    </ul> -->
-    <!-- <div> -->
+  {% if cards != None %}
+    {{ mdebug(cards) }}
+    {% for cardID, name, smallImage, largeImage, types in cards %}
     <a>
       <div name={{cardID}} style="padding: 20px; margin: 50px;">
-        <Label style="font-size: 50px;">{{name}}</Label>
+        <Label style="font-size: 50px;">{{name}} ({{cardID}})</Label>
         <br>
-        {% for type in types %}
-          <label for="pokemonTypes" style="font-size: 25px">{{type}}</label>
-        {% endfor %}
+        {% if types != None %}
+          {% for type in types %}
+            <label for="pokemonTypes" style="font-size: 25px">{{type}}</label>
+          {% endfor %}
+        {% endif %}
         <br>
-        <img src={{largeImage}} width="350px">
+        <img src={{smallImage}} style="min-width: 350px; min-height:490px; margin:50px;" width=350px onclick="
+            if (this.src == '{{smallImage}}') {this.src = '{{largeImage}}';}
+            else this.src = '{{smallImage}}';
+          " onerror="
+          this.src='/static/pkmncard_back.png';
+          this.onerror=null;">
         <a href="add/{{ cardID }}" class="btn btn-outline-success btn-lg">Add Card to Your Collection</a>
       </div>
     </a>
-    <!-- </div> -->
-  
     {% endfor %}
-    {% endif %}
+  {% endif %}
   </div>
   {% endblock %}

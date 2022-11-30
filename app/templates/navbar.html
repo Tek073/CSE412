@@ -4,13 +4,42 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
+      div.radio_settings {
+        display:grid;
+        grid-template-columns: 200px 200px 200px;
+        grid-gap:5px;
+        }
+      div.radio_settings label { 
+        padding-top: 10px;
+        padding-bottom: 10px;
+        padding-left:20%;
+        padding-right:20%;
+        background-color: aliceblue;
+        text-align: end; 
+        font-weight: 500;
+        }
+      div.radio_settings input {
+        background-color: aliceblue;
+        /* font-weight: 500; */
+        }
+
       div.settings {
-      display:grid;
-      grid-template-columns: max-content max-content;
-      grid-gap:5px;
-      }
+        display:grid;
+        grid-template-columns: max-content max-content;
+        grid-gap:5px;
+        }
       div.settings label { 
-        text-align:right; 
+        padding-left:20%;
+        padding-right:20%;
+        min-width: 200px;
+        background-color: aliceblue;
+        text-align: end; 
+        font-weight: 500;
+        }
+      div.settings input { 
+        min-width: 400px;
+        margin-left: auto;
+        background-color: aliceblue;
         font-weight: 500;
         }
       div.settings label:after { content: ""; }

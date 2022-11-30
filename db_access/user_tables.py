@@ -95,7 +95,7 @@ class Collection:
     def search(self, conds:dict):
         cur = self.cursor
 
-        w = ' AND '.join(cur.mogrify('%s = %s', key, conds[key]) for key in conds)
+        w = ' AND '.join(cur.mogrify('%s = %%s' % key, [conds[key]]).decode() for key in conds)
 
         cur.execute('''
             SELECT cic.cardID, name, count, largeImage  
@@ -191,21 +191,18 @@ class Deck:
     def create(self, deckName):
         if (self.numDecks >= 10):
             return False
+        self.numDecks += 1
         deckID = self.numDecks
-        
         self.cursor.execute('''
             INSERT INTO decks
             VALUES (%s, %s, %s);
             ''',
             (self.userID, deckID, deckName)
         )
-        
-        self.numDecks += 1
-        self.deckIDList.append(self.numDecks)
-
+        self.deckIDList.append(deckID)
         return True
 
-    # return list, where [n][0] is id, [n][1] is name for deckID = n
+    # return list, where [n][0] is id, [n][1] is name for nth deck
     def getInfoFromAllDecks(self):
         self.cursor.execute('''
         SELECT deckID, deckName 
@@ -243,17 +240,22 @@ class Deck:
         )
 
     # returns cardIDs and counts for cards in deck, given parameters
-    def search(self, **kwargs):
-        found = []
-        cardIDs = search_cards(self.cursor, kwargs)
-        for cardID in cardIDs:
-            self.cursor.execute('''
-                SELECT cardID, count
-                FROM decks
-                WHERE userID = %s AND deckID = %s AND cardID = %s''',
-                (self.userID, self.deckID, cardID))
-            found.append(self.cursor.fetchone())
-        return found
+    def search(self, conds:dict, **kwargs):
+        cur = self.cursor
+        d = []
+        if kwargs.get('deckID') != None:
+            d = '(' + ' OR '.join((cur.mogrify('deckID = %s', id)).decode() for id in kwargs['deckID']) + ')'
+        w = ' AND '.join(cur.mogrify('%s = %%s' % key, [conds[key]]).decode() for key in conds)
+        print(d)
+        print(w)
+        return
+
+        cur.execute('''
+            SELECT cid.cardID, name, count, largeImage  
+            FROM _cards_in_decks cid, cards c
+            WHERE userID = %s AND cid.cardID = c.cardID ''' + w + d,
+            (self.userID))
+        return cur.fetchall()
 
     def add(self, deckID, cardID):
         try:
