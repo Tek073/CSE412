@@ -3,6 +3,18 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      div.settings {
+      display:grid;
+      grid-template-columns: max-content max-content;
+      grid-gap:5px;
+      }
+      div.settings label { 
+        text-align:right; 
+        font-weight: 500;
+        }
+      div.settings label:after { content: ""; }
+    </style>
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -30,7 +42,8 @@
       <div class="collapse navbar-collapse" id="navbar">
         <div class="navbar-nav">
           <a class="nav-item nav-link" id="Home" href="/">Home</a>
-          <a class="nav-item nav-link" id="Card Collection" href="/cardCollection">Card Collection</a>
+          <a class="nav-item nav-link" id="Decks" href="/decks">Decks</a>
+          <a class="nav-item nav-link" id="Collection" href="/cardCollection">Collection</a>
           <a class="nav-item nav-link" id="SignUp" href="/sign_up">SignUp</a>
           <a class="nav-item nav-link" id="Login" href="/login">Login</a>
 

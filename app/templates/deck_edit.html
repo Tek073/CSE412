@@ -1,5 +1,39 @@
 {% extends "navbar.html" %} {% block title %} Decks | PTCG Deck and Collection Manager {% endblock %} {% block content %}
-    <h1 align="center"></h1>
+<p>
+<form method="POST" style="padding: 20px; margin-left: auto;">
+  <!-- 'settings' class lines up 2 items next to each other. see navbar.html for details -->
+    <div class="settings">
+      <Label for="search-name">Name:</Label><input type="text" name="search-name">
+
+      <Label for="search-supertype">Supertype:</Label><input type="text" name="search-supertype">
+
+      <Label for="search-subtype">Subtype:</Label><input type="text" name="search-subtype">
+
+      <Label for="search-types">Types:</Label><input type="text" name="search-types">
+
+      <Label for="search-rules">Rules:</Label><input type="text" name="search-rules">
+
+      <Label for="search-setid">SetID:</Label><input type="text" name="search-setid">
+
+      <Label for="search-num">Number in set:</Label><input type="text" name="search-num">
+
+      <Label for="search-artist">Artist:</Label><input type="text" name="search-artist">
+
+      <Label for="search-rarity">Rarity:</Label><input type="text" name="search-rarity">
+
+      <Label for="search-flavortext">Flavor text:</Label><input type="text" name="search-flavortext">
+    </div>
+      <Label style="font-weight: 900; text-align:center">Legality of Formats</Label>
+    <div class="settings">
+      <Label for="unl-leg">Unlimited:</Label><input type="checkbox">
+      <Label for="unl-leg">Expanded:</Label><input type="checkbox">
+      <Label for="unl-leg">Standard:</Label><input type="checkbox">
+      <br><input type="submit" value="Search" style="width:200px">
+    </div>
+      
+    </form>
+  </p>    
+
     <div style="width: 50%; margin: auto">
       <!-- passing id makes it easy to pass-back id, which makes it easy to edit cards in some other file-->
       {% set num = namespace(value=0) %}
@@ -7,7 +41,7 @@
         {% for i in range(count) %}
           {% set num.value = num.value + 1 %}
           <a href="{{url_for('decks.card_edit', deckID=deck.deckID, cardID=id)}}">
-            <div style="padding: 20px; margin: 50px; background-color: aliceblue"
+            <div style="padding: 20px; margin: 50px; background-color: aliceblue">
               <p style="font-size: 12px">{{id}}</p>
               <p style="font-size: 24px">{{name}}</p>
               <img src="{{imageURL}}" width="300px">
@@ -16,14 +50,12 @@
         {% endfor %}
       {% endfor %}
     </div>
-    <Label for="deck-search-by-ID">Search for card by ID</Label>
-    <input type="search" id="deck-search-by-ID" name="q">
-    <button>Search</button>
+    
     <form method="POST">
-      <textarea name="note" id="note" class="form-control"></textarea>
-      <br/>
-      <div align="center">
-        <button type="submit" class="btn btn-primary">Add Note</button>
-      </div>
+      <Label for="search">Input search parameters</Label>
+      <textarea name="search" id="asdf" class="form-control"></textarea>
+      <!-- <input type="search" id="sc" name="search-collection"> -->
+      <input for="search" type="submit" name="search-collection" value="Search Collection"></button>
+      <input for="search" type="submit" name="search-deck" value="Search Deck"></button>
     </form>
     {% endblock %}

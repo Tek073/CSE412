@@ -92,17 +92,27 @@ class Collection:
         self.cursor = conn.cursor()
     
     # return cardIDs and counts of cards in collection, given search parameters
-    def search(self, **kwargs):
-        found = []
-        cardIDs = search_cards(self.cursor, **kwargs)
-        for cardID in cardIDs:
-            self.cursor.execute('''
-                SELECT cardID, count
-                FROM _cards_in_collections
-                WHERE userID = %s AND cardID = %s''',
-                (self.userID, cardID))
-            found.append(self.cursor.fetchone())
-        return found
+    def search(self, conds:dict):
+        cur = self.cursor
+
+        w = ' AND '.join(cur.mogrify('%s = %s', key, conds[key]) for key in conds)
+
+        cur.execute('''
+            SELECT cic.cardID, name, count, largeImage  
+            FROM _cards_in_collections cic, cards c
+            WHERE userID = %s AND cic.cardID = c.cardID ''' + w,
+            (self.userID))
+        return cur.fetchall()
+        
+        #found = []
+        # cardIDs = search_cards(self.cursor, kwargs)
+        # for cardID in cardIDs:
+        #     self.cursor.execute('''
+        #         SELECT cardID, count
+        #         FROM _cards_in_collections
+        #         WHERE userID = %s AND cardID = %s''',
+        #         (self.userID, cardID))
+        #     found.append(self.cursor.fetchone())
 
     # add card by cardID into Collection
     def add(self, cardID):
@@ -235,7 +245,7 @@ class Deck:
     # returns cardIDs and counts for cards in deck, given parameters
     def search(self, **kwargs):
         found = []
-        cardIDs = search_cards(self.cursor, **kwargs)
+        cardIDs = search_cards(self.cursor, kwargs)
         for cardID in cardIDs:
             self.cursor.execute('''
                 SELECT cardID, count

@@ -12,14 +12,16 @@ def list():
     collection = user.collection.get()
 
     if request.method == "POST":
-        cardName = request.form['search']
+        data = dict(request.form)
+        cardName = (data["search"])
+        cardName += '%' # add % for LIKE functionality 
         print(cardName)
         collection = user.collection.get()
         for card in collection:
             user.cursor.execute('''
                 SELECT cardID, name, largeImage, types
                 FROM cards
-                WHERE cardID = %s AND upper(name) = upper(%s)''',
+                WHERE cardID = %s AND upper(name) LIKE upper(%s)''',
                 (card, cardName))
             userCollection.append(user.cursor.fetchone())
         print(userCollection)

@@ -1,12 +1,17 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 
+from start import user
+from globals import search_cards
+
+cur = user.cursor
+deck = user.decks
+cardInfo = []
 
 decks = Blueprint('decks', __name__)
 
 @decks.route('/decks')
 def list():
     from start import user
-
 
     cur = user.cursor
     deck = user.decks
@@ -20,18 +25,24 @@ def list():
 def edit(deckID):
     from start import user
 
-
     cur = user.cursor
     deck = user.decks
     cardInfo = []
     user.decks.changeTo(deckID) 
 
+    if request.method == 'POST':
+        print(request.form)
+        if request.form.get('search-collection') != None:
+            user.collection.search(request.args)
+        if request.form.get('search-deck') != None:
+            user.decks.searchOne(request.args)
+
     cur.execute('''
-        SELECT cards.cardID, cards.name, count, largeImage
-        FROM _cards_in_decks, cards
+        SELECT c.cardID, c.name, count, largeImage
+        FROM _cards_in_decks cic, cards c
         WHERE userID = %s
         AND deckID = %s
-        AND _cards_in_decks.cardID = cards.cardID''',
+        AND cic.cardID = c.cardID''',
         (user.id, deckID))
 
     cardInfo = cur.fetchall()
@@ -45,14 +56,12 @@ def edit(deckID):
 def card_edit(deckID, cardID):
     from start import user
 
-
     cur = user.cursor
     deck = user.decks
     cardInfo = []
     if request.method == 'POST':
-        if request.form['del-card'] == 'del-card':
+        if request.form.get('del-card') == 'del-card':
             user.decks.delete(deckID, cardID)
             return redirect(url_for('decks.edit', deckID=deckID))
 
     return render_template('card_edit.html', deckID=deckID, cardID=cardID, cardInfo=cardInfo)
-    return f'<h1>DeckID: {deckID}. This card is #{numInDeck} in deck'
