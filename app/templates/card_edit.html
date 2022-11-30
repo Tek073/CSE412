@@ -1,0 +1,24 @@
+{% extends "navbar.html" %} {% block title %} Decks | PTCG Deck and Collection Manager {% endblock %} {% block content %}
+    <h1 align="center"></h1>
+    <div style="width: 50%; margin: auto">
+      <!-- passing id makes it easy to pass-back id, which makes it easy to edit cards in some other file-->
+      {% for id, name, count, imageURL in cardInfo %}
+          <a href="{{url_for('decks.card_edit', deckID=deckID, cardID=id)}}">
+            <div style="padding: 20px; margin: 50px; background-color: aliceblue"
+              <p style="font-size: 12px">{{id}}</p>
+              <p style="font-size: 24px">{{name}}</p>
+              <p style="font-size: 24px">{{count}}</p>
+              <img src="{{imageURL}}" width="750px">
+            </div>
+          </a>
+      {% endfor %}
+    </div>
+    <!-- <Label for="del-card">Search for card by ID</Label>
+    <input type="button" id="del-card" name="del-card">
+    <button>Search</button> -->
+    <form method="POST">
+      <div align="center">
+        <button type="submit" name="del-card" value="del-card">Delete Card</button>
+      </div>
+    </form>
+    {% endblock %}

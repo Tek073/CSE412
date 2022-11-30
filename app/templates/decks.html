@@ -4,11 +4,11 @@
       {% for deckID, deckName in decks %}
       <!-- <ul class="list-group list-group-flush" id="notes">
       </ul> -->
-      <a href="/{{username}}/{{deckName}}">
+      <a href="{{url_for('decks.edit', deckID=deckID)}}">
         <div style="padding: 20px; margin: 50px; background-color: aliceblue"
           <p style="font-size: 12px">{{deckID}}</p>
           <p style="font-size: 24px">{{deckName}}</p>
-          <img src="https://images.pokemontcg.io/xy1/1_hires.png" width="50px">
+          <img src="/static/pkmncard_back.png" width="50px">
         </div>
       </a>
       {% endfor %}

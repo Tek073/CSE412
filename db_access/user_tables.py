@@ -156,6 +156,10 @@ class Deck:
         self.userID = user.id
         self.conn = conn
         self.cursor = conn.cursor()
+        self.deckIDList = []
+        self.numDecks = 0
+        self.deckID = 0
+        self.deckName = 'default'
 
         self.cursor.execute('''
             SELECT deckID
@@ -171,16 +175,10 @@ class Deck:
             self.numDecks = len(self.deckIDList) # deckID from 1-10
             self.deckID = self.deckIDList[0] # arbitrarily make default deckID 1st one in list
             self.deckName = 'placeholder'
-        # else if no decks
-        else:
-            self.deckIDList = []
-            self.numDecks = 0
-            self.deckID = 0
-            self.deckName = 'default'
 
     def create(self, deckName):
         if (self.numDecks >= 10):
-            return
+            return False
         deckID = self.numDecks
         
         self.cursor.execute('''
@@ -189,21 +187,48 @@ class Deck:
             ''',
             (self.userID, deckID, deckName)
         )
+        
         self.numDecks += 1
         self.deckIDList.append(self.numDecks)
 
-    def getAllDeckInfo(self):
-        self.cursor.execute('''SELECT deckID, deckname FROM decks WHERE userID = %s''', (self.userID,))
+        return True
+
+    # return list, where [n][0] is id, [n][1] is name for deckID = n
+    def getInfoFromAllDecks(self):
+        self.cursor.execute('''
+        SELECT deckID, deckName 
+        FROM decks 
+        WHERE userID = %s''', 
+        (self.userID,))
         return self.cursor.fetchall()
 
+    # return list, where [0] is id, [1] is name
+    def getInfoFromOneDeck(self, deckID):
+        self.cursor.execute('''
+        SELECT deckID, deckName 
+        FROM decks 
+        WHERE userID = %s 
+        AND deckID = %s''', 
+        (self.userID, deckID))
+        return self.cursor.fetchone()
+
+    # switch to another deck, by setting deckID and deckName
     def changeTo(self, deckID):
         self.deckID = deckID
+        if (self.deckID == deckID):
+            return
+        deckInfo = self.getInfoFromOneDeck(deckID)
+        self.deckName = deckInfo[1]
 
-    def getCards(self):
-        self.cursor.execute(f"SELECT * FROM decks WHERE deckID = {self.deckNum}")
-
+    # returns size, i.e. # of cards in a deck
     def size(self):
-        self.cursor.execute(f"SELECT COUNT(*) FROM decks WHERE deckID = {self.deckNum}")
+        self.cursor.execute('''
+        SELECT COUNT(*) 
+        FROM decks 
+        WHERE userID = %s
+        AND deckID = %s''',
+        (self.userID, self.deckID)
+        )
 
     # returns cardIDs and counts for cards in deck, given parameters
     def search(self, **kwargs):
@@ -224,25 +249,49 @@ class Deck:
                 INSERT INTO _cards_in_decks
                 VALUES (%s, %s, %s, 1);''',
                 (self.userID, deckID, cardID))
-        except KeyError: #card already exists in deck; increment count instead
+        except KeyError: # card already exists in deck; increment count instead
+
+            # First check if count can be incremented
             self.cursor.execute('''
                 SELECT count
                 FROM _cards_in_decks
-                WHERE deckID = %s AND cardID = %s;''',
-                (deckID, cardID))
+                WHERE userID = %s AND deckID = %s AND cardID = %s;''',
+                (self.userID, deckID, cardID))
             if (self.cursor.fetchone()[0] >= 4):
                 return False
             
+            # Increment count
             self.cursor.execute('''
                 UPDATE _cards_in_decks
                 SET count = count + 1
-                WHERE deckID = %s AND cardID = %s AND count < 4;''',
-                (deckID, cardID))
+                WHERE userID = %s AND deckID = %s AND cardID = %s AND count < 4;''',
+                (self.userID, deckID, cardID))
 
             return True
             
         except (Exception, Error) as error:
             print(error)   
+
+    # given deckID and cardID, removes 1 of that card from the deck
+    def delete(self, deckID, cardID):
+
+        # delete card if it's last of it's kind in deck
+        self.cursor.execute('''
+            DELETE FROM _cards_in_decks
+            WHERE userID = %s AND deckID = %s AND cardID = %s AND count = 1;''',
+            (self.userID, deckID, cardID))
+
+        # else, decrement card's count
+        if self.cursor.rowcount == 0:
+            self.cursor.execute('''
+                UPDATE _cards_in_decks
+                SET count = count - 1
+                WHERE userID = %s AND deckID = %s AND cardID = %s;''',
+                (self.userID, deckID, cardID))
+            if (self.cursor.rowcount == 0):
+                return False
+
+        return True
 
 
 
