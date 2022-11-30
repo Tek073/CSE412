@@ -26,7 +26,7 @@ def begin():
 def add(cardID):
     from start import user
 
-    user.collection.add(user.id, cardID)
+    user.collection.add(cardID)
     # user.cursor.execute('''
     #     INSERT INTO _cards_in_collections VALUES
     #     (%s, %s, %s)''',
@@ -39,6 +39,7 @@ def add(cardID):
 def search(): 
     from start import user
     cardsToAdd = []
+    collection = []
     if request.method == "POST":
         cardName = request.form['cardName']
         cardName += '%'
@@ -49,7 +50,9 @@ def search():
             WHERE upper(name) LIKE upper(%s)''',
             [cardName])
         
-        cardsToAdd = user.cursor.fetchall()
+        collection = user.cursor.fetchall()
+        for card in collection:
+            cardsToAdd.append(card)
         print(cardsToAdd)
     return render_template('addToCollection.html', username=user.username, cards=cardsToAdd)
     

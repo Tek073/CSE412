@@ -126,6 +126,7 @@ class Collection:
                 INSERT INTO _cards_in_collections
                 VALUES (%s, %s, 1);''', 
                 (self.userID, cardID))
+            self.conn.commit()
         except KeyError:
             self.cursor.execute('''
                 UPDATE _cards_in_collections
@@ -304,7 +305,7 @@ class Deck:
                 (self.userID, deckID, cardID))
             if (self.cursor.rowcount == 0):
                 return False
-
+        self.conn.commit()
         return True
 
 
