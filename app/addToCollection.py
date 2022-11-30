@@ -40,7 +40,8 @@ def search():
             WHERE upper(name) LIKE upper(%s)''',
             [cardName])
         
-        userCollection.append(user.cursor.fetchone())
+        for card in user.cursor.fetchall():
+            userCollection.append(card)
         print(userCollection)
     return render_template('addToCollection.html', username=user.username, cards=userCollection)
     
