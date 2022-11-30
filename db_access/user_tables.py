@@ -145,6 +145,7 @@ class Collection:
             DELETE FROM _cards_in_collections
             WHERE userID = %s AND cardID = %s;''', 
             (self.userID, cardID))
+        self.conn.commit()
 
     def get(self):
         self.cursor.execute('''SELECT cardID FROM _cards_in_collections WHERE userID = %s''', (self.userID,))
