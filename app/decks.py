@@ -1,15 +1,16 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 
-from start import user
-
-cur = user.cursor
-deck = user.decks
-cardInfo = []
 
 decks = Blueprint('decks', __name__)
 
 @decks.route('/decks')
 def list():
+    from start import user
+
+
+    cur = user.cursor
+    deck = user.decks
+    cardInfo = []
     decks = user.decks.getInfoFromAllDecks()
     return render_template('decks.html', user=user, decks=decks)
 
@@ -17,6 +18,12 @@ def list():
 # NOTE: updates deckID
 @decks.route('/decks/<deckID>', methods=['GET', 'POST'])
 def edit(deckID):
+    from start import user
+
+
+    cur = user.cursor
+    deck = user.decks
+    cardInfo = []
     user.decks.changeTo(deckID) 
 
     cur.execute('''
@@ -36,6 +43,12 @@ def edit(deckID):
 # See detailed card info for one card. Also can delete a card
 @decks.route('/decks/<deckID>/<cardID>', methods=['GET', 'POST'])
 def card_edit(deckID, cardID):
+    from start import user
+
+
+    cur = user.cursor
+    deck = user.decks
+    cardInfo = []
     if request.method == 'POST':
         if request.form['del-card'] == 'del-card':
             user.decks.delete(deckID, cardID)

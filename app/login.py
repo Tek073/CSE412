@@ -1,10 +1,11 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
-from start import user
+
 
 login = Blueprint('login', __name__)
 
 @login.route('/', methods=['GET', 'POST'])
 def login_page():
+    from start import user
     if request.method == 'POST':
         username = request.form.get('username')
         password = request.form.get('password')

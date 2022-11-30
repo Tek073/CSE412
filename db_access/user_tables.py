@@ -147,7 +147,8 @@ class Collection:
             (self.userID, cardID))
 
     def get(self):
-        self.cursor.execute(f"SELECT * FROM collection")
+        self.cursor.execute('''SELECT cardID FROM _cards_in_collections WHERE userID = %s''', (self.userID,))
+        return self.cursor.fetchall()
 ##############################################################
 # Requires conn, and userID to only get data belonging to user
 class Deck:

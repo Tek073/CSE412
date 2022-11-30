@@ -7,3 +7,10 @@ def search_cards(cur, tbl_name, **kwargs):
         FROM {tbl_name}
         WHERE ''' + str)
     return cur.fetchall()
+
+def search(cur):
+    cur.execute('''
+    SELECT *
+    FROM cards
+    ''')
+    return cur.fetchall()

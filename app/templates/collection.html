@@ -1,14 +1,30 @@
-{% extends "navbar.html" %} {% block title %}Home{% endblock %} {% block content
-    %}
-    <h1 align="center">Notes</h1>
-    <ul class="list-group list-group-flush" id="notes">
+{% extends "navbar.html" %} {% block title %} Decks | PTCG Deck and Collection Manager {% endblock %} {% block content %}
+<!-- (A) SEARCH FORM -->
+<form method="post" style="padding: 20px; margin-left: auto;">
+  <input type="text" name="search" required>
+  <input type="submit" value="Search">
+</form>
 
-    </ul>
-    <form method="POST">
-      <textarea name="note" id="note" class="form-control"></textarea>
-      <br />
-      <div align="center">
-        <button type="submit" class="btn btn-primary">Add Note</button>
-      </div>
-    </form>
-    {% endblock %}
+<div>
+  {% if cards | length != 0 %}
+  {% for name, largeImage, types in cards %}
+  <!-- <ul class="list-group list-group-flush" id="notes">
+  </ul> -->
+  <!-- <div> -->
+  <a>
+    <div onclick="" name={{name}} style="padding: 20px; margin: 50px;">
+      <Label style="font-size: 50px;">{{name}}</Label>
+      <br>
+      {% for type in types %}
+        <label for="pokemonTypes" style="font-size: 25px">{{type}}</label>
+      {% endfor %}
+      <br>
+      <img src={{largeImage}} width="350px">
+    </div>
+  </a>
+  <!-- </div> -->
+
+  {% endfor %}
+  {% endif %}
+</div>
+{% endblock %}

@@ -4,10 +4,10 @@ from psycopg2 import *
 from flask import flash
 
 DB_USER = "postgres"
-DB_PASS = "asdf" #"Conej0"
+DB_PASS = "Conej0" #
 DB_HOST = "localhost"
 DB_PORT = "5432"
-DB_NAME = "PTCG_DB" #"postgres" #"Assign"
+DB_NAME = "ptcg_db" #"postgres" #
 
 class DBConnection:
     # Establishes DB connection
