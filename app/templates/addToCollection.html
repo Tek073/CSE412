@@ -1,4 +1,4 @@
-{% extends "navbar.html" %} {% block title %} Decks | PTCG Deck and Collection Manager {% endblock %} {% block content %}
+{% extends "navbar.html" %} {% block title %} Add a Card to Collection | PTCG Deck and Collection Manager {% endblock %} {% block content %}
 <div style="padding: 20px; margin: auto;">
     <p>Search Cards to Add into Your Collection</p>
   </div>
@@ -26,12 +26,14 @@
           {% endfor %}
         {% endif %}
         <br>
+        {% if user.loadimages == True}
         <img src={{smallImage}} style="min-width: 350px; min-height:490px; margin:50px;" width=350px onclick="
             if (this.src == '{{smallImage}}') {this.src = '{{largeImage}}';}
             else this.src = '{{smallImage}}';
           " onerror="
           this.src='/static/pkmncard_back.png';
           this.onerror=null;">
+        {% endif %}
         <a href="add/{{ cardID }}" class="btn btn-outline-success btn-lg">Add Card to Your Collection</a>
       </div>
     </a>

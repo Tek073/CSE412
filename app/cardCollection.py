@@ -29,7 +29,7 @@ def list():
             if item is not None :
                 results.append(item)    
         print(results)
-        return render_template('collection.html', username=username, cards=results)
+        return render_template('collection.html', user=user, cards=results)
     else:
         for card in collection:
             user.cursor.execute('''
@@ -40,7 +40,7 @@ def list():
             userCollection.append(user.cursor.fetchone())
         print(userCollection)
     
-        return render_template('collection.html', username=username, cards=userCollection)
+        return render_template('collection.html', user=user, cards=userCollection)
 
 @cardCollection.route('/delete/<cardID>', methods=['GET', 'POST'])
 def delete(cardID):

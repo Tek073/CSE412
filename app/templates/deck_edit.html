@@ -1,13 +1,5 @@
-{% extends "navbar.html" %} {% block title %} Decks | PTCG Deck and Collection Manager {% endblock %} {% block content %}
-  <style>
-    body {
-      background-image: url('/static/scenery.png');
-      background-repeat: no-repeat;
-      background-attachment: fixed;
-      background-size: 100% 100%;
+{% extends "navbar.html" %} {% block title %} Viewing Deck | PTCG Deck and Collection Manager {% endblock %} {% block content %}
 
-    }
-  </style>
 <p>
 <form method="POST" style="padding: 20px; margin-left: auto;">
   <!-- 'settings' class lines up 2 items next to each other. see navbar.html for details -->
@@ -22,44 +14,54 @@
       <Label>Artist:</Label><input placeholder="Saya Tsuruta, Yuka Morii..." type="search" name="artist">
       <Label>Rarity:</Label><input placeholder="Common, Rare Holo EX, Promo..."type="search" name="rarity">
       <Label>Flavor text:</Label><input placeholder="As it flies around, it shoots lightning all over..."type="search" name="flavortext">
-      <!-- Its nictitating membranes let it pick out foes'' weak points -->
-      <!-- They thump their bones rhythmically... -->
+
     </div>
       <Label style="font-weight: 900; text-align:center">Legality of Formats</Label>
+      <div class ="radio_settings" style="text-align: center;">
+        <Label>Legalities:</Label><Label>Legal</Label><Label>Illegal</Label><Label>Either</Label>
+      </div>
     <div class="radio_settings" style="text-align:justify">
-      <Label>Unlimited: y/n</Label> <input name="unlLeg" value="Legal" type="radio" checked>
+
+      <Label>Unlimited:</Label> <input name="unlLeg" value=Legal type="radio">
                                     <input name="unlLeg" value=Illegal type="radio">
-      <Label>Expanded: y/n</Label>  <input name="expLeg" value="Legal" type="radio" checked>
+                                    <input name="unlLeg" value=Either type="radio" checked>
+      <Label>Expanded:</Label>  <input name="expLeg" value=Legal type="radio">
                                     <input name="expLeg" value=Illegal type="radio">
-      <Label>Standard: y/n</Label>  <input name="stdLeg" value="Legal" type="radio" checked>
+                                    <input name="expLeg" value=Either type="radio" checked>
+      <Label>Standard:</Label>  <input name="stdLeg" value=Legal type="radio">
                                     <input name="stdLeg" value=Illegal type="radio">
+                                    <input name="stdLeg" value=Either type="radio" checked>
     </div>
-    <div class="settings">
+    <div class="settings" style="padding-top:10px">
       <input type="submit" name="search-deck" value="Search decks">
       <input type="submit" name="search-collection" value="Search collection">
     </div>
     </form>
     <div class="settings" style="padding-block-end: 50px; grid-template-columns: 300px 300px 300px; margin:auto; align-items:flex-end;">
       <!-- passing id makes it easy to pass-back id, which makes it easy to edit cards in some other file-->
+    {% if cardInfo != None %}
       {% set num = namespace(value=0) %}
-      {% for id, name, count, imageURL in cardInfo %}
+      {% for id, name, count, largeImage in cardInfo %}
         {% for i in range(count) %}
           {% set num.value = num.value + 1 %}
           <a href="{{url_for('decks.card_edit', deckID=deck.deckID, cardID=id)}}">
             <div width="300px" style="margin: auto; background-color: aliceblue">
-              <p style="font-size: 12px">{{id}}</p>
+              <p style="font-size: 20px">{{id}}</p>
               <p style="font-size: 24px">{{name}}</p>
-              <img src="{{imageURL}}" width="300px">
+              {% if user.loadimages == True %}
+                <img src="{{largeImage}}" width="300px">
+              {% endif %}
             </div>
           </a>
         {% endfor %}
       {% endfor %}
+    {% endif %}
     </div>
     
     <!-- <form method="POST">
       <Label for="search">Input search parameters</Label>
       <textarea name="search" id="asdf" class="form-control"></textarea>
-      <!-- <input type="search" id="sc" name="search-collection"> 
+      <input type="search" id="sc" name="search-collection"> 
       <input for="search" type="submit" name="search-collection" value="Search Collection"></button>
       <input for="search" type="submit" name="search-deck" value="Search Deck"></button>
     </form> -->

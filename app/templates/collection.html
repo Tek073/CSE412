@@ -1,4 +1,4 @@
-{% extends "navbar.html" %} {% block title %} Decks | PTCG Deck and Collection Manager {% endblock %} {% block content %}
+{% extends "navbar.html" %} {% block title %} Viewing Collection | PTCG Deck and Collection Manager {% endblock %} {% block content %}
 <!-- (A) SEARCH FORM -->
 <div style="padding: 20px; margin: auto;">
   <p>Search Your Card Collection</p>
@@ -22,7 +22,9 @@
         <label for="pokemonTypes" style="font-size: 25px">{{type}}</label>
       {% endfor %}
       <br>
-      <img src={{largeImage}} width="350px">
+      {% if user.loadimages == True %}
+        <img src={{largeImage}} width="350px">
+      {% endif %}
       <a href="delete/{{ cardID }}" class="btn btn-outline-danger btn-lg">Delete</a>
     </div>
   </a>

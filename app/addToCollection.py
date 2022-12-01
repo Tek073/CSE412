@@ -51,5 +51,5 @@ def search():
         
         cardsToAdd = user.cursor.fetchall()
         print(cardsToAdd)
-    return render_template('addToCollection.html', username=user.username, cards=cardsToAdd)
+    return render_template('addToCollection.html', user=user, cards=cardsToAdd)
     

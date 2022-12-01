@@ -8,7 +8,7 @@ import re
 # And a deck table, which draws from their collection
 
 from .api_calls import *
-from globals import search_cards
+from globals import search_cards, advanced_search
 
 class User:
     # Default guest login
@@ -16,6 +16,7 @@ class User:
         user.conn = conn
         user.cursor = conn.cursor()
 
+        user.loadimages = False
         user.id = 0 # Guest ID
         user.username = 'Guest'
         user.cid = []  # cards in decks, list (deckID) of lists (cardID)
@@ -151,10 +152,18 @@ class Collection:
             (count, self.userID, cardID))
 
     def delete(self, cardID):
+        # subtract count
         self.cursor.execute('''
-            DELETE FROM _cards_in_collections
-            WHERE userID = %s AND cardID = %s;''', 
+            UPDATE _cards_in_collections
+            SET count = count-1
+            WHERE userID = %s AND cardID = %s AND count > 1;''', 
             (self.userID, cardID))
+        # if only 1 left, delete card
+        if self.cursor.rowcount == 0:
+            self.cursor.execute('''
+                DELETE FROM _cards_in_collections
+                WHERE userID = %s AND cardID = %s;''', 
+                (self.userID, cardID))
         self.conn.commit()
 
     def get(self):
@@ -165,6 +174,7 @@ class Collection:
 class Deck:
     def __init__(self, user):
         conn = user.conn
+        self.userID = 0 
         self.userID = user.id
         self.conn = conn
         self.cursor = conn.cursor()
@@ -241,21 +251,8 @@ class Deck:
 
     # returns cardIDs and counts for cards in deck, given parameters
     def search(self, conds:dict, **kwargs):
-        cur = self.cursor
-        d = []
-        if kwargs.get('deckID') != None:
-            d = '(' + ' OR '.join((cur.mogrify('deckID = %s', id)).decode() for id in kwargs['deckID']) + ')'
-        w = ' AND '.join(cur.mogrify('%s = %%s' % key, [conds[key]]).decode() for key in conds)
-        print(d)
-        print(w)
-        return
-
-        cur.execute('''
-            SELECT cid.cardID, name, count, largeImage  
-            FROM _cards_in_decks cid, cards c
-            WHERE userID = %s AND cid.cardID = c.cardID ''' + w + d,
-            (self.userID))
-        return cur.fetchall()
+        kwargs['search_in'] = 'decks'
+        return advanced_search(self, conds, **kwargs)
 
     def add(self, deckID, cardID):
         try:

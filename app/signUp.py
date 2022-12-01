@@ -1,7 +1,5 @@
 from flask import Blueprint, render_template, request, flash, redirect, url_for
 
-
-
 signUp = Blueprint('signUp', __name__)
 
 @signUp.route('/', methods=['GET','POST'])
