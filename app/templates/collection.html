@@ -2,15 +2,52 @@
 <!-- (A) SEARCH FORM -->
 <div style="padding: 20px; margin: auto;">
   <p>Search Your Card Collection</p>
+  <p>Subtypes, types, rules may have multiple values. They should be separated by commas</p>
 </div>
-<form id="searchCollection" method="post" style="padding: 5px; margin-left: auto;">
-  <input style="width: 350px" placeholder="Card Name(ex. Charmander, dialga)" type="text" name="search" required>
-  <input type="submit" value="Search" name="search">
+<!-- <form action="/addToCollection/search" method="post" style="padding: 5px; margin-left: auto;">
+  <input style="width: 350px" placeholder="Card Name(ex. Charmander, dialga)" type="text" name="cardName" required>
+  <input type="submit" value="Search Card Database" name="search">
+</form> -->
+
+<form action="/addToCollection/search" method="POST" style="padding: 20px; margin-left: auto;">
+  <!-- 'settings' class lines up 2 items next to each other. see navbar.html for details -->
+    <div class="settings">
+      <Label>Name:</Label><input placeholder="Venusaur, Charizard..." type="search" name="name">
+      <Label>Supertype:</Label><input placeholder="Pokemon, Trainer, Energy..." type="search" name="supertype">
+      <Label>Subtypes:</Label><input placeholder="Basic, MEGA, VMAX..." type="search" name="subtypes">
+      <Label>Types:</Label><input placeholder="Darkness, Colorless, Psychic..."type="search" name="types">
+      <Label>Rules:</Label><input placeholder="Flip a coin..."type="search" name="rules">
+      <Label>SetID:</Label><input placeholder="swsh9-87, xy1-23, xy5-105..." type="search" name="setID">
+      <Label>Number in set:</Label><input placeholder="1, 23, 108..." type="search" name="number">
+      <Label>Artist:</Label><input placeholder="Saya Tsuruta, Yuka Morii..." type="search" name="artist">
+      <Label>Rarity:</Label><input placeholder="Common, Rare Holo EX, Promo..."type="search" name="rarity">
+      <Label>Flavor text:</Label><input placeholder="As it flies around, it shoots lightning all over..."type="search" name="flavortext">
+
+    </div>
+      <Label style="font-weight: 900; text-align:center">Legality of Formats</Label>
+      <div class ="radio_settings" style="text-align: center;">
+        <Label>Legalities:</Label><Label>Legal</Label><Label>Illegal</Label><Label>Either</Label>
+      </div>
+    <div class="radio_settings" style="text-align:justify">
+
+      <Label>Unlimited:</Label> <input name="unlLeg" value=Legal type="radio">
+                                    <input name="unlLeg" value=Illegal type="radio">
+                                    <input name="unlLeg" value=Either type="radio" checked>
+      <Label>Expanded:</Label>  <input name="expLeg" value=Legal type="radio">
+                                    <input name="expLeg" value=Illegal type="radio">
+                                    <input name="expLeg" value=Either type="radio" checked>
+      <Label>Standard:</Label>  <input name="stdLeg" value=Legal type="radio">
+                                    <input name="stdLeg" value=Illegal type="radio">
+                                    <input name="stdLeg" value=Either type="radio" checked>
+    </div>
+  <div class="settings" style="padding-top:10px">
+    <input type="submit" name="search-collection" value="Search collection">
+  </div>
 </form>
 
 <div>
   {% if cards | length != 0 %}
-  {% for cardID, name, largeImage, types in cards %}
+  {% for cardID, name, smallImage, largeImage, types, count in cards %}
   <!-- <ul class="list-group list-group-flush" id="notes">
   </ul> -->
   <!-- <div> -->
@@ -18,9 +55,11 @@
     <div name={{cardID}} style="padding: 20px; margin: 50px;">
       <Label style="font-size: 50px;">{{name}}</Label>
       <br>
-      {% for type in types %}
-        <label for="pokemonTypes" style="font-size: 25px">{{type}}</label>
-      {% endfor %}
+      {% if types != None %}
+        {% for type in types %}
+          <label for="pokemonTypes" style="font-size: 25px">{{type}}</label>
+        {% endfor %}
+      {% endif %}
       <br>
       {% if user.loadimages == True %}
         <img src={{largeImage}} width="350px">

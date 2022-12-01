@@ -2,13 +2,13 @@
     <h1 align="center"></h1>
     <div style="width: 50%; margin: auto">
       <!-- passing id makes it easy to pass-back id, which makes it easy to edit cards in some other file-->
-      {% for id, name, count, imageURL in cardInfo %}
+      {% for id, name, smallImage, largeImage, types, count in cardInfo %}
           <a href="{{url_for('decks.card_edit', deckID=deckID, cardID=id)}}">
-            <div style="padding: 20px; margin: 50px; background-color: aliceblue"
+            <div style="padding: 20px; margin: 50px; background-color: aliceblue">
               <p style="font-size: 12px">{{id}}</p>
               <p style="font-size: 24px">{{name}}</p>
               <p style="font-size: 24px">{{count}}</p>
-              <img src="{{imageURL}}" width="750px">
+              <img src="{{largeImage}}" width="750px">
             </div>
           </a>
       {% endfor %}
@@ -17,8 +17,14 @@
     <input type="button" id="del-card" name="del-card">
     <button>Search</button> -->
     <form method="POST">
-      <div align="center">
-        <button type="submit" name="del-card" value="del-card">Delete Card</button>
+      <div textalign="center">
+        <!-- {% if edit == 'collection' %}
+          <a href="add/{{ cardID }}" class="btn btn-outline-success btn-lg">Add Card to Your Collection</a>
+        {% endif %} -->
+        <!-- {% if edit == 'deck' %} -->
+          <!-- <a href="delete/{{ cardID }}" class="btn btn-outline-danger btn-lg">Delete</a> -->
+          <button type="submit" name="del-card" value="del-card" class="btn btn-outline-danger btn-lg">Delete Card</button>
+        <!-- {% endif %} -->
       </div>
     </form>
     {% endblock %}

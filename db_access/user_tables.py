@@ -83,7 +83,7 @@ class User:
     # Logs out the user, by setting userID to guestID, 0
     def logout(user):
         user.id = 0
-        
+
     def search(self, conds:dict, **kwargs):
         kwargs['search_in'] = 'cards'
         return advanced_search(self, conds, **kwargs)
@@ -134,13 +134,15 @@ class Collection:
                 INSERT INTO _cards_in_collections
                 VALUES (%s, %s, 1);''', 
                 (self.userID, cardID))
-            self.conn.commit()
+
         except KeyError:
             self.cursor.execute('''
                 UPDATE _cards_in_collections
                 SET count = count + 1
                 WHERE userID = %s AND cardID = %s;''', 
                 (self.userID, cardID))
+
+        self.conn.commit()
 
     def subtract(self, cardID, count : int):
         self.cursor.execute('''
@@ -158,6 +160,7 @@ class Collection:
             SET count = count - %s
             WHERE userID = %s AND cardID = %s;''', 
             (count, self.userID, cardID))
+        self.conn.commit()
 
     def delete(self, cardID):
         # subtract count
@@ -208,15 +211,21 @@ class Deck:
 
     def create(self, deckName):
         if (self.numDecks >= 10):
+            print('No more decks')
             return False
-        self.numDecks += 1
-        deckID = self.numDecks
+        deckID = self.numDecks + 1
+        # print(self.numDecks)
+        # print(self.userID)
+        # print(deckID)
+        # print(deckName)
         self.cursor.execute('''
             INSERT INTO decks
             VALUES (%s, %s, %s);
             ''',
             (self.userID, deckID, deckName)
         )
+        self.conn.commit()
+        self.numDecks += 1
         self.deckIDList.append(deckID)
         return True
 
@@ -263,33 +272,40 @@ class Deck:
         return advanced_search(self, conds, **kwargs)
 
     def add(self, deckID, cardID):
-        try:
+        # try:
+        #     self.cursor.execute('''
+        #         INSERT INTO _cards_in_decks
+        #         VALUES (%s, %s, %s, 1);''',
+        #         (self.userID, deckID, cardID))
+        # except (Exception, Error) as error: # card already exists in deck; increment count instead
+        #     #print(error)  
+        #     # First check if count can be incremented
+        self.cursor.execute('''
+            SELECT count
+            FROM _cards_in_decks
+            WHERE userID = %s AND deckID = %s AND cardID = %s;''',
+            (self.userID, deckID, cardID))
+        
+        count = self.cursor.fetchone() # tuple of 1 value
+        print(count)
+        if count == None:
             self.cursor.execute('''
                 INSERT INTO _cards_in_decks
                 VALUES (%s, %s, %s, 1);''',
                 (self.userID, deckID, cardID))
-        except KeyError: # card already exists in deck; increment count instead
-
-            # First check if count can be incremented
-            self.cursor.execute('''
-                SELECT count
-                FROM _cards_in_decks
-                WHERE userID = %s AND deckID = %s AND cardID = %s;''',
-                (self.userID, deckID, cardID))
-            if (self.cursor.fetchone()[0] >= 4):
-                return False
-            
-            # Increment count
+            self.conn.commit()
+        elif (count[0] >= 4):
+            return False
+        # Increment count
+        else:
             self.cursor.execute('''
                 UPDATE _cards_in_decks
                 SET count = count + 1
                 WHERE userID = %s AND deckID = %s AND cardID = %s AND count < 4;''',
                 (self.userID, deckID, cardID))
-
-            return True
-            
-        except (Exception, Error) as error:
-            print(error)   
+            self.conn.commit()
+        
+        return True
 
     # given deckID and cardID, removes 1 of that card from the deck
     def delete(self, deckID, cardID):

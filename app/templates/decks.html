@@ -1,26 +1,22 @@
 {% extends "navbar.html" %} {% block title %} Decks | PTCG Deck and Collection Manager {% endblock %} {% block content %}
-    <h1 align="center"></h1>
+<div style="padding: 20px; margin: auto">
+  <Label>Create new deck</Label>
+  <form method="POST">
+    <input style="min-width: max-content" type="search" name="deckname" placeholder="Enter the name of your deck">
+    <input type="submit" name="create-deck">
+  </form>
+</div> 
     <div style="width: 50%; margin: auto">
       {% for deckID, deckName in decks %}
       <!-- <ul class="list-group list-group-flush" id="notes">
       </ul> -->
       <a href="{{url_for('decks.edit', deckID=deckID)}}">
-        <div style="padding: 20px; margin: 50px; background-color: aliceblue"
+        <div style="padding: 20px; margin: 50px; background-color: aliceblue">
           <p style="font-size: 20px">{{deckID}}</p>
           <p style="font-size: 24px">{{deckName}}</p>
-          <img src="/static/pkmncard_back.png" width="50px">
+          <!-- <img src="/static/pkmncard_back.png" width="50px"> -->
         </div>
       </a>
       {% endfor %}
     </div>
-    <Label for="deck-search-by-ID">Create new deck</Label>
-    <input type="search" id="deck-search-by-ID" name="q">
-    <button>Search</button>
-    <form method="POST">
-      <textarea name="note" id="note" class="form-control"></textarea>
-      <br/>
-      <div align="center">
-        <button type="submit" class="btn btn-primary">Add Note</button>
-      </div>
-    </form>
     {% endblock %}

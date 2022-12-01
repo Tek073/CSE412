@@ -1,6 +1,7 @@
 {% extends "navbar.html" %} {% block title %} Viewing Deck | PTCG Deck and Collection Manager {% endblock %} {% block content %}
 
 <p>
+  <Label>TypeInfo: {{typeInfo}}</Label>
 <form method="POST" style="padding: 20px; margin-left: auto;">
   <!-- 'settings' class lines up 2 items next to each other. see navbar.html for details -->
     <div class="settings">
@@ -9,7 +10,7 @@
       <Label>Subtypes:</Label><input placeholder="Basic, MEGA, VMAX..." type="search" name="subtypes">
       <Label>Types:</Label><input placeholder="Darkness, Colorless, Psychic..."type="search" name="types">
       <Label>Rules:</Label><input placeholder="Flip a coin..."type="search" name="rules">
-      <Label>SetID:</Label><input placeholder="swsh9-87, xy1-23, xy5-105..." type="search" name="setID">
+      <Label>SetID:</Label><input placeholder="swsh9, xy1, xy5..." type="search" name="setID">
       <Label>Number in set:</Label><input placeholder="1, 23, 108..." type="search" name="number">
       <Label>Artist:</Label><input placeholder="Saya Tsuruta, Yuka Morii..." type="search" name="artist">
       <Label>Rarity:</Label><input placeholder="Common, Rare Holo EX, Promo..."type="search" name="rarity">
@@ -33,7 +34,8 @@
                                     <input name="stdLeg" value=Either type="radio" checked>
     </div>
     <div class="settings" style="padding-top:10px">
-      <input type="submit" name="search-deck" value="Search decks">
+      <input type="submit" name="search-current-deck" value="Search current deck">
+      <input type="submit" name="search-decks" value="Search in all decks">
       <input type="submit" name="search-collection" value="Search collection">
     </div>
     </form>
@@ -41,10 +43,16 @@
       <!-- passing id makes it easy to pass-back id, which makes it easy to edit cards in some other file-->
     {% if cardInfo != None %}
       {% set num = namespace(value=0) %}
-      {% for id, name, count, largeImage in cardInfo %}
+      {% for id, name, smallImage, largeImage, types, count in cardInfo %}
         {% for i in range(count) %}
           {% set num.value = num.value + 1 %}
+            {% if editable == 'deck' %}
           <a href="{{url_for('decks.card_edit', deckID=deck.deckID, cardID=id)}}">
+            {% elif editable == 'collection' %}
+          <a href="{{url_for('decks.card_add', deckID=deck.deckID, cardID=id)}}">
+            {% else %}
+          <a>
+            {% endif %}
             <div width="300px" style="margin: auto; background-color: aliceblue">
               <p style="font-size: 20px">{{id}}</p>
               <p style="font-size: 24px">{{name}}</p>

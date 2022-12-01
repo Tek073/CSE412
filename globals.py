@@ -55,9 +55,13 @@ def advanced_search(self, conds:dict, **kwargs):
         arrConds = {}
         keys = ['subtypes','types','rules']
         for k in keys:
-            if conds.get(k) != '':
+            if conds.get(k) != '' and conds.get(k) != None:
                 arrConds[k] = conds[k].strip()
-            del conds[k]
+            try:
+                del conds[k]
+            except:
+                print('key error for arrConds')
+                pass
         print("arrConds:",arrConds)
 
         legConds = {}
@@ -81,7 +85,8 @@ def advanced_search(self, conds:dict, **kwargs):
         print("conds after deletion:",conds)
         
         if kwargs.get('deckID') != None:
-            d = 'AND ' + '(' + ' OR '.join((cur.mogrify('deckID = %s', id)).decode() for id in kwargs['deckID']) + ')'
+            did = kwargs['deckID']
+            d = ' AND ' + '(' + ((cur.mogrify(f'deckID = {did}')).decode()) + ')'
         w = ''.join(cur.mogrify(' AND upper(%s) LIKE upper(%%s)' % key, ['%'+conds[key]+'%']).decode() for key in conds)
         #a = ''.join(cur.mogrify(' AND %s @> %%s::varchar[]' % key, [arrConds[key].split(',')]).decode() for key in arrConds)
         
@@ -99,19 +104,20 @@ def advanced_search(self, conds:dict, **kwargs):
         if kwargs.get('search_in') != None:
             if kwargs['search_in'] == 'decks':
                 cur.execute(f'''
-                    SELECT cid.cardID, name, count, largeImage  
+                    SELECT cid.cardID, name, smallImage, largeImage, types, count  
                     FROM _cards_in_decks cid, cards c
                     WHERE userID = {id} AND cid.cardID = c.cardID''' + d + w + a + l)
             if kwargs['search_in'] == 'collection':
                 cur.execute(f'''
-                    SELECT cic.cardID, name, smallImage, largeImage, types  
+                    SELECT cic.cardID, name, smallImage, largeImage, types, count  
                     FROM _cards_in_collections cic, cards c
                     WHERE userID = {id} AND cic.cardID = c.cardID''' + d + w + a + l)
             if kwargs['search_in'] == 'cards':
                 cur.execute(f'''
-                    SELECT cardID, name, smallImage, largeImage, types  
+                    SELECT cardID, name, smallImage, largeImage, types, setID
                     FROM cards c
-                    WHERE 0=0''' + d + w + a + l) # 0=0, to account for first 'AND' in dwal 
+                    WHERE 0=0''' + d + w + a + l) # 0=0, to account for first 'AND' in dwal, 
+                                                # setID just to match col counts
 
         to_return = cur.fetchall()
         print (to_return)

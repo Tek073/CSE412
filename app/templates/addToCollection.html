@@ -18,7 +18,7 @@
         <Label>Subtypes:</Label><input placeholder="Basic, MEGA, VMAX..." type="search" name="subtypes">
         <Label>Types:</Label><input placeholder="Darkness, Colorless, Psychic..."type="search" name="types">
         <Label>Rules:</Label><input placeholder="Flip a coin..."type="search" name="rules">
-        <Label>SetID:</Label><input placeholder="swsh9-87, xy1-23, xy5-105..." type="search" name="setID">
+        <Label>SetID:</Label><input placeholder="swsh9, xy1, xy5..." type="search" name="setID">
         <Label>Number in set:</Label><input placeholder="1, 23, 108..." type="search" name="number">
         <Label>Artist:</Label><input placeholder="Saya Tsuruta, Yuka Morii..." type="search" name="artist">
         <Label>Rarity:</Label><input placeholder="Common, Rare Holo EX, Promo..."type="search" name="rarity">
@@ -55,7 +55,7 @@
   <div>
   {% if cards != None %}
     {{ mdebug(cards) }}
-    {% for cardID, name, smallImage, largeImage, types in cards %}
+    {% for cardID, name, smallImage, largeImage, types, count in cards %}
     <a>
       <div name={{cardID}} style="padding: 20px; margin: 50px;">
         <Label style="font-size: 50px;">{{name}} ({{cardID}})</Label>
