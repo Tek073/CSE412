@@ -29,7 +29,7 @@ CREATE TABLE decks (
   deckID int,
   deckName varchar(255),
   
-  PRIMARY KEY (deckID),
+  PRIMARY KEY (userID, deckID),
   FOREIGN KEY (userID) REFERENCES users
 );
 
@@ -96,8 +96,8 @@ CREATE TABLE _cards_in_decks (
              -- Count variable preferable to, e.g. deckSlot, since mixing insert/delete doesn't mess it up
  
   PRIMARY KEY (userID, deckID, cardID),
-  FOREIGN KEY (deckID) REFERENCES decks, -- checks deck exists
-  FOREIGN KEY (cardID) REFERENCES cards ON DELETE CASCADE-- checks card exists in collection
+  FOREIGN KEY (userID, deckID) REFERENCES decks(userID, deckID), -- checks deck exists
+  FOREIGN KEY (cardID) REFERENCES cards(cardID) ON DELETE CASCADE-- checks card exists in collection
 );
 
 -- b/c there are multiple users, there are multiple collections. 
