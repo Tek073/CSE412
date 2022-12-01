@@ -56,7 +56,7 @@ def advanced_search(self, conds:dict, **kwargs):
         keys = ['subtypes','types','rules']
         for k in keys:
             if conds.get(k) != '':
-                arrConds[k] = conds[k]
+                arrConds[k] = conds[k].strip()
             del conds[k]
         print("arrConds:",arrConds)
 
@@ -65,7 +65,7 @@ def advanced_search(self, conds:dict, **kwargs):
         for leg in legs:
             if conds.get(leg) != None:
                 if conds.get(leg) == 'Legal':
-                    legConds[leg] = conds[leg]
+                    legConds[leg] = conds[leg].strip()
                 elif conds.get(leg) == 'Illegal':
                     legConds[leg] = None
                 del conds[leg]
@@ -76,6 +76,8 @@ def advanced_search(self, conds:dict, **kwargs):
         for key in temp:
             if temp[key] == '':
                 del conds[key]
+            else:
+                conds[key] = temp[key].strip()
         print("conds after deletion:",conds)
         
         if kwargs.get('deckID') != None:
