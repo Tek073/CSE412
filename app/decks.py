@@ -25,30 +25,6 @@ def edit(deckID):
     if request.method == 'POST':
         data = dict(request.form)
         print(data)
-        # # Legalities uses checkboxes. It's slightly more complicated.
-        # # if both checkboxes checked, we don't care about legality. so remove them
-        # legs = [['unlLeg','unlIll'],['expLeg','expIll'],['stdLeg','stdIll']]
-        # for leg, ill in legs:
-        #     if data.get(leg) != None and data.get(ill) != None: # both legal and illegal, i.e. doesn't matter
-        #         del data[leg]
-        #         del data[ill]
-        #     elif data.get(ill) != None: # just illegal
-        #         data[leg] = None # set leg to illegal
-        #         del data[ill]
-        #     # else just legal; no change required
-        #     # else not legal nor illegal; impossible to determine,
-        #     #    so instead ignore it, which is already done since both Nonetype
-
-        # legs = ['unlLeg','expLeg','stdLeg']
-        # for leg in legs:
-        #     if data.get(leg) != None:
-        #         if data[leg] == 'Illegal':
-        #             data[leg] = None
-        #         if data[leg] == 'Either':
-        #             del data[leg]
- 
-        # w = ' AND '.join(cur.mogrify('%s = %%s' % key, [data[key]]).decode() for key in data)
-        # print(w)
         
         if data.get('search-collection') != None:
             print('searching collection...')

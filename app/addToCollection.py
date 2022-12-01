@@ -19,7 +19,6 @@ def begin():
     print(username)
     collection = user.collection.get()
 
-
     return render_template('addToCollection.html')
 
 @addToCollection.route('/add/<cardID>', methods=['GET', 'POST'])
@@ -41,18 +40,33 @@ def search():
     cardsToAdd = []
     collection = []
     if request.method == "POST":
-        cardName = request.form['cardName']
-        cardName += '%'
-        print(cardName)
-        user.cursor.execute('''
-            SELECT cardID, name, smallImage, largeImage, types
-            FROM cards
-            WHERE upper(name) LIKE upper(%s)''',
-            [cardName])
+        data = dict(request.form)
+        print(data)
         
-        collection = user.cursor.fetchall()
-        for card in collection:
-            cardsToAdd.append(card)
-        print(cardsToAdd)
+        if data.get('search-collection') != None:
+            print('searching collection...')
+            del data['search-collection']
+            print(data)
+            cardsToAdd = user.collection.search(data)
+        if data.get('search-cards') != None:
+            print('searching card database...')
+            del data['search-cards']
+            print(data)
+            cardsToAdd = user.search(data)
+            
+        # cardName = request.form['cardName']
+        # cardName += '%'
+        # print(cardName)
+        # user.cursor.execute('''
+        #     SELECT cardID, name, smallImage, largeImage, types
+        #     FROM cards
+        #     WHERE upper(name) LIKE upper(%s)''',
+        #     [cardName])
+        
+        # collection = user.cursor.fetchall()
+        # for card in collection:
+        #     cardsToAdd.append(card)
+        # print(cardsToAdd)
+        
     return render_template('addToCollection.html', user=user, cards=cardsToAdd)
     

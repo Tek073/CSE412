@@ -43,9 +43,13 @@ def search_cards(cur, tbl_name, conditions:dict):
 
 #     return cur.fetchall()
 
-# !!! assuming 'self' is Decks or Collection Object !!!
+# !!! assuming 'self' is Decks, Collection or User Object !!!
 def advanced_search(self, conds:dict, **kwargs):
         cur = self.cursor
+        try:
+            id = self.userID[0] # Decks and Collection
+        except:
+            id = self.id[0] # User
         d = ''
         
         arrConds = {}
@@ -54,7 +58,7 @@ def advanced_search(self, conds:dict, **kwargs):
             if conds.get(k) != '':
                 arrConds[k] = conds[k]
             del conds[k]
-        print(arrConds)
+        print("arrConds:",arrConds)
 
         legConds = {}
         legs = ['unlLeg', 'expLeg', 'stdLeg']
@@ -65,24 +69,30 @@ def advanced_search(self, conds:dict, **kwargs):
                 elif conds.get(leg) == 'Illegal':
                     legConds[leg] = None
                 del conds[leg]
-        print(conds)
+        print("legConds:",legConds)
 
+        print("conds before deletion:",conds)
         temp = dict(conds) # create copy of data, so we can delete key-value pairs during iteration
         for key in temp:
             if temp[key] == '':
                 del conds[key]
-
-        print(conds)
-        print(legConds)
+        print("conds after deletion:",conds)
+        
         if kwargs.get('deckID') != None:
             d = 'AND ' + '(' + ' OR '.join((cur.mogrify('deckID = %s', id)).decode() for id in kwargs['deckID']) + ')'
         w = ''.join(cur.mogrify(' AND upper(%s) LIKE upper(%%s)' % key, ['%'+conds[key]+'%']).decode() for key in conds)
-        a = ''.join(cur.mogrify(' AND %s @> %%s::varchar[]' % key, [arrConds[key].split(',')]).decode() for key in arrConds)
-        l = ''.join(cur.mogrify(' AND %s = %%s' % key, [legConds[key]]).decode() for key in legConds)
-        print(d+a+w+l)
+        #a = ''.join(cur.mogrify(' AND %s @> %%s::varchar[]' % key, [arrConds[key].split(',')]).decode() for key in arrConds)
+        
+        a = ''.join(''.join(cur.mogrify('''
+         AND EXISTS (
+        SELECT 1 FROM unnest(%s) AS a
+        WHERE upper(a) LIKE upper(%%s))''' 
+        % key, ['%'+i.strip()+'%']).decode() for i in arrConds[key].split(',')) 
+        for key in arrConds)
 
-        # assuming 'self' is Decks or Collection
-        id = self.userID[0]
+        l = ''.join(cur.mogrify(' AND %s = %%s' % key, [legConds[key]]).decode() for key in legConds)
+
+        print("full mogrified string:",d+a+w+l)
 
         if kwargs.get('search_in') != None:
             if kwargs['search_in'] == 'decks':
@@ -93,13 +103,13 @@ def advanced_search(self, conds:dict, **kwargs):
             if kwargs['search_in'] == 'collection':
                 cur.execute(f'''
                     SELECT cic.cardID, name, smallImage, largeImage, types  
-                    FROM _cards_in_collection cic, cards c
+                    FROM _cards_in_collections cic, cards c
                     WHERE userID = {id} AND cic.cardID = c.cardID''' + d + w + a + l)
             if kwargs['search_in'] == 'cards':
                 cur.execute(f'''
                     SELECT cardID, name, smallImage, largeImage, types  
                     FROM cards c
-                    WHERE userID = {id}''' + d + w + a + l)
+                    WHERE 0=0''' + d + w + a + l) # 0=0, to account for first 'AND' in dwal 
 
         to_return = cur.fetchall()
         print (to_return)

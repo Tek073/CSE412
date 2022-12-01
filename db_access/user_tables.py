@@ -83,6 +83,10 @@ class User:
     # Logs out the user, by setting userID to guestID, 0
     def logout(user):
         user.id = 0
+        
+    def search(self, conds:dict, **kwargs):
+        kwargs['search_in'] = 'cards'
+        return advanced_search(self, conds, **kwargs)
 ##############################################################
 # Requires conn, and userID to only get data belonging to user
 class Collection:
@@ -93,7 +97,10 @@ class Collection:
         self.cursor = conn.cursor()
     
     # return cardIDs and counts of cards in collection, given search parameters
-    def search(self, conds:dict):
+    def search(self, conds:dict, **kwargs):
+        kwargs['search_in'] = 'collection'
+        return advanced_search(self, conds, **kwargs)
+        
         cur = self.cursor
 
         w = ' AND '.join(cur.mogrify('%s = %%s' % key, [conds[key]]).decode() for key in conds)
